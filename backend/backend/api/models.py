@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils import timezone
 
 class Tournament(models.Model):
 
@@ -11,11 +12,26 @@ class Tournament(models.Model):
     tournamentName = models.CharField(max_length=100, default="Unnamed Tournament")
     tournamentFormat = models.TextField(max_length=10, choices=TOURNAMENT_FORMATS, default="5v5")
     description = models.CharField(max_length=100, default="No Description")
-    participantsCap = models.IntegerField(default = 0)
+    teamsCap = models.IntegerField(default = 0)
     prizePool = models.FloatField(default=0.0)
     registrationFee = models.FloatField(default=0.0)
+    startTime = models.DateTimeField(default=timezone.now())
     ended = models.BooleanField(default=False)
 
 class Team(models.Model):
+
+    TEAM_JOINING_MODES = (
+        ("public", "public"),
+        ("request-only", "request-only"),
+        ("invite-only", "invite-only"),
+    )
+
     teamName = models.TextField(max_length=100, default="Unnamed Team")
+    teamAcronym = models.TextField(max_length=3, default="NUL")
     tournament = models.ForeignKey(Tournament, related_name="teams", on_delete=models.CASCADE)
+    teamJoiningMode = models.TextField(max_length=12, choices=TEAM_JOINING_MODES, default="public")
+    members = models.JSONField(default={})
+
+class RegisteredSummoners(models.Model):
+
+    summonerID = models.TextField(max_length=16, default="No Name")
