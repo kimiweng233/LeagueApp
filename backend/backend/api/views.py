@@ -6,11 +6,9 @@ from django.forms.models import model_to_dict
 from .serializers import TeamSerializer, TournamentSerializer    
 from .models import Tournament, Team
 
-import json
-
 @api_view(['GET'])
 def getTournamentsList(request):
-    tournaments = Tournament.objects.all()
+    tournaments = Tournament.objects.filter(ended=False).all()
     serializer = TournamentSerializer(tournaments, many=True)
     return Response(serializer.data)
 
@@ -44,3 +42,10 @@ def getTeamsList(request):
 def getTeamData(request):
     team = Team.objects.filter(id=request.data["id"]).first()
     return Response({"team": model_to_dict(team)})
+
+@api_view(['POST'])
+def getTournamentData(request):
+    tournament = Tournament.objects.filter(id=request.data["id"]).first()
+    tournamentData = model_to_dict(tournament)
+    tournamentData["teams"] = list(tournament.teams.values())
+    return Response({"tournament": tournamentData})

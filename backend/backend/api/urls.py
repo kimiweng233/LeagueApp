@@ -7,4 +7,5 @@ urlpatterns = [
     path('createTeam/', views.createTeam),
     path('getTeamsList/', views.getTeamsList),
     path('getTeamData/', views.getTeamData),
+    path('getTournamentData/', views.getTournamentData),
 ]

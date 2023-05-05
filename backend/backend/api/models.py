@@ -16,6 +16,7 @@ class Tournament(models.Model):
     prizePool = models.FloatField(default=0.0)
     registrationFee = models.FloatField(default=0.0)
     startTime = models.DateTimeField(default=timezone.now())
+    started = models.BooleanField(default=False)
     ended = models.BooleanField(default=False)
 
 class Team(models.Model):
