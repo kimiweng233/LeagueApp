@@ -8,4 +8,5 @@ urlpatterns = [
     path('getTeamsList/', views.getTeamsList),
     path('getTeamData/', views.getTeamData),
     path('getTournamentData/', views.getTournamentData),
+    path('summonerLogin/', views.summonerLogin),
 ]

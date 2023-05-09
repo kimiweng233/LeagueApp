@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 
 import services from '../services'
+import LoginGuard from '../components/loginGuard';
 
 function TournamentForm() {
   const [tournamentName, setTournamentName] = useState("");
@@ -95,4 +96,4 @@ function TournamentForm() {
   );
 }
   
-export default TournamentForm;
+export default LoginGuard(TournamentForm);

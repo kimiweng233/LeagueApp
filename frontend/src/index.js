@@ -11,6 +11,7 @@ import TeamForm from './pages/teamCreation';
 import TeamsList from './pages/teamsList';
 import TeamMenu from './pages/teamMenu';
 import TournamentMenu from './pages/tournamentMenu';
+import LeagueLogin from './pages/leagueLogin';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -23,6 +24,7 @@ root.render(
           <Route exact path='/teams' element={<TeamsList/>} />
           <Route exact path='/teamPage' element={<TeamMenu/>} />
           <Route exact path='/tournamentPage' element={<TournamentMenu/>} />
+          <Route exact path='/linkAccount' element={<LeagueLogin/>} />
           <Route exact path='/*' element={<Home/>} />
       </Routes>
   </BrowserRouter>

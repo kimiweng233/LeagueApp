@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 
 import TournamentBracket from "../components/tournamentBracket";
+import LoginGuard from '../components/loginGuard';
 
 import services from '../services'
 

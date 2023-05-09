@@ -4,6 +4,7 @@ import { useSearchParams } from "react-router-dom";
 import services from '../services'
 
 import TeamListing from "../components/teamListing"
+import LoginGuard from '../components/loginGuard';
 
 function TeamsList() {
 
@@ -25,4 +26,4 @@ function TeamsList() {
   );
 }
   
-export default TeamsList;
+export default LoginGuard(TeamsList);

@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 
 import services from '../services'
+import LoginGuard from '../components/loginGuard';
 
 function TeamForm() {
   const [teamName, setTeamName] = useState("");
@@ -59,4 +60,4 @@ function TeamForm() {
   );
 }
   
-export default TeamForm;
+export default LoginGuard(TeamForm);

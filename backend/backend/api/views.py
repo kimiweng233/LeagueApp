@@ -4,7 +4,12 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from django.forms.models import model_to_dict
 
 from .serializers import TeamSerializer, TournamentSerializer    
-from .models import Tournament, Team
+from .models import Tournament, Team, RegisteredSummoner
+
+import requests
+
+RIOT_API_ROOT="https://na1.api.riotgames.com"
+RIOT_API_KEY="RGAPI-381e648b-63de-48d2-b210-647f364eb8c4"
 
 @api_view(['GET'])
 def getTournamentsList(request):
@@ -49,3 +54,17 @@ def getTournamentData(request):
     tournamentData = model_to_dict(tournament)
     tournamentData["teams"] = list(tournament.teams.values())
     return Response({"tournament": tournamentData})
+
+@api_view(['POST'])
+def summonerLogin(request):
+    summonerLookup = requests.get(RIOT_API_ROOT + 
+                                "/lol/summoner/v4/summoners/by-name/" + request.data["summonerID"] + 
+                                "?api_key=" + RIOT_API_KEY)
+    if summonerLookup.status_code == 404:
+        return Response({'message':'Summoner ID Not Found'}, 404)
+
+    if not RegisteredSummoner.objects.filter(summonerID=request.data["summonerID"]).exists():
+        summoner = RegisteredSummoner(summonerID=request.data["summonerID"])
+        summoner.save()
+
+    return Response({'message':'login successful'})

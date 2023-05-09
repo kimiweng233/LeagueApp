@@ -9,13 +9,13 @@ class Tournament(models.Model):
         ("5v5", "5v5"),
     )
 
-    tournamentName = models.CharField(max_length=100, default="Unnamed Tournament")
+    tournamentName = models.CharField(max_length=100, default="Unnamed Tournament", unique=True)
     tournamentFormat = models.TextField(max_length=10, choices=TOURNAMENT_FORMATS, default="5v5")
     description = models.CharField(max_length=100, default="No Description")
     teamsCap = models.IntegerField(default = 0)
     prizePool = models.FloatField(default=0.0)
     registrationFee = models.FloatField(default=0.0)
-    startTime = models.DateTimeField(default=timezone.now())
+    startTime = models.DateTimeField(default=timezone.now)
     started = models.BooleanField(default=False)
     ended = models.BooleanField(default=False)
 
@@ -27,12 +27,14 @@ class Team(models.Model):
         ("invite-only", "invite-only"),
     )
 
-    teamName = models.TextField(max_length=100, default="Unnamed Team")
-    teamAcronym = models.TextField(max_length=3, default="NUL")
+    teamName = models.TextField(max_length=100, default="Unnamed Team", unique=True)
+    teamAcronym = models.TextField(max_length=3, default="NUL", unique=True)
     tournament = models.ForeignKey(Tournament, related_name="teams", on_delete=models.CASCADE)
     teamJoiningMode = models.TextField(max_length=12, choices=TEAM_JOINING_MODES, default="public")
-    members = models.JSONField(default={})
+    members = models.JSONField(default=dict)
 
-class RegisteredSummoners(models.Model):
+class RegisteredSummoner(models.Model):
 
-    summonerID = models.TextField(max_length=16, default="No Name")
+    summonerID = models.TextField(max_length=16, default="No Name", unique=True)
+    registeredTournaments = models.JSONField(default=dict)
+    registeredTeams = models.JSONField(default=dict)

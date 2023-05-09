@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 
 import services from '../services'
+import LoginGuard from '../components/loginGuard';
 
 function TeamMenu(prop) {
 
@@ -29,4 +30,4 @@ function TeamMenu(prop) {
     );
 }
   
-export default TeamMenu;
+export default LoginGuard(TeamMenu);
