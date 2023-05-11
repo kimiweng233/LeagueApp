@@ -28,6 +28,18 @@ const summonerLogin = (data) => {
   return http.post(`/summonerLogin/`, data);
 };
 
+const joinTeam = (data) => {
+  return http.post(`/joinTeam/`, data);
+};
+
+const getTournamentsJoined = (data) => {
+  return http.post(`/getTournamentsJoined/`, data);
+};
+
+const getTeamsJoined = (data) => {
+  return http.post(`/getTeamsJoined/`, data);
+};
+
 const functions = {
   getTournamentsList,
   createTournament,
@@ -36,6 +48,9 @@ const functions = {
   getTeamData,
   getTournamentData,
   summonerLogin,
+  joinTeam,
+  getTournamentsJoined,
+  getTeamsJoined,
 };
 
 export default functions

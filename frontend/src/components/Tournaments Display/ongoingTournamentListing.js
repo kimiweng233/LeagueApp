@@ -30,7 +30,7 @@ function OngoingTournament(props) {
     };
   }
 
-  const WrappedComponent =  TournamentCard(ViewBracketButton, ViewLivestream, viewBracketFunc, viewLivestreamFunc);
+  const WrappedComponent =  TournamentCard([{"button": ViewBracketButton, "props": viewBracketFunc}, {"button": ViewLivestream, "props": viewLivestreamFunc}]);
 
   return <WrappedComponent {...props} />;
 

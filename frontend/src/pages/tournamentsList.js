@@ -1,20 +1,22 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 
 import services from '../services'
 
-import OpenTournament from '../components/openTournament';
-import OngoingTournament from '../components/ongoingTournamentListing';
+import OpenTournament from '../components/Tournaments Display/openTournament';
+import OngoingTournament from '../components/Tournaments Display/ongoingTournamentListing';
 import LoginGuard from '../components/loginGuard';
 
 function TournamentsList() {
 
   const [tournamentsList, setTournamentsList] = useState([]);
-  const navigate = useNavigate();
+  const [enrolledTournaments, setJoinedTournaments] = useState([]);
 
   useEffect(() => {
     services.getTournamentsList().then(response => {
       setTournamentsList(response.data);
+    })
+    services.getTournamentsJoined({"summonerID": localStorage.getItem("summonerID")}).then(response => {
+      setJoinedTournaments(response.data.map(tournament => tournament.id));
     })
   }, [])
 
@@ -24,15 +26,13 @@ function TournamentsList() {
       {tournamentsList && tournamentsList.filter( tournament => {
         return tournament.started;
       }).map((tournament) => {
-        return <OngoingTournament key={tournament.id} {...tournament}/>
-        // return <TestTournamentListing key={tournament.id} {...tournament}/> 
+        return <OngoingTournament key={tournament.id} {...tournament}/> 
       })}
       <h1>Open Tournaments</h1>
       {tournamentsList && tournamentsList.filter( tournament => {
         return !tournament.started;
       }).map((tournament) => {
-        // return <TestTournamentListing key={tournament.id} {...tournament}/> 
-        return <OpenTournament key={tournament.id} {...tournament}/>
+        return <OpenTournament key={tournament.id} {...tournament} alreadyJoined={enrolledTournaments.includes(tournament.id)}/>
       })}
     </div>
   );

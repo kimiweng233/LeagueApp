@@ -1,18 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import services from '../services'
 
 function LeagueLogin() {
   const [summonerID, setSummonerID] = useState('');
-  const location = useLocation();
   const navigate = useNavigate();
 
   useEffect(() => {
     if (localStorage.getItem("summonerID") !== null) {
       navigate("/");
     }
-  }, [])
+  }, [navigate])
 
   const handleSubmit = (event) => {
     event.preventDefault();

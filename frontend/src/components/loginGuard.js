@@ -8,7 +8,7 @@ const LoginGuard = (Component) => {
 
     useEffect(() => {
         if (localStorage.getItem("summonerID") === null) {
-          navigate("/login");
+          navigate("/linkAccount");
         }
       }, [])
 

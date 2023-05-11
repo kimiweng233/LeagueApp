@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Tournament, Team
+from .models import Tournament, Team, Summoner
 
 class JSONSerializerField(serializers.Field):
 
@@ -12,7 +12,8 @@ class JSONSerializerField(serializers.Field):
 class TeamSerializer(serializers.ModelSerializer):
 
     tournament = serializers.CharField()
-    members = JSONSerializerField()
+    rolesFilled = JSONSerializerField()
+    pendingRequests = JSONSerializerField()
 
     class Meta:
         model = Team
@@ -30,3 +31,11 @@ class TournamentSerializer(serializers.ModelSerializer):
         model = Tournament
         fields = '__all__'
 
+class SummonerSerializer(serializers.ModelSerializer):
+
+    # registeredTournaments = TournamentSerializer
+    # registeredTeams = TeamSerializer
+
+    class Meta:
+        model = Summoner
+        fields = ("summonerID",)

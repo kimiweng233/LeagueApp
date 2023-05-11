@@ -14,11 +14,15 @@ function TeamForm() {
   const handleSubmit = (event) => {
     event.preventDefault();
     services.createTeam({
-      "teamName": teamName,
-      "teamAcronym": teamAcronym,
-      "tournament": searchParams.get("tournamentID"),
-      "teamJoiningMode": teamJoiningMode,
-      "members": {},
+      "teamData": {
+        "teamName": teamName,
+        "teamAcronym": teamAcronym,
+        "tournament": searchParams.get("tournamentID"),
+        "teamJoiningMode": teamJoiningMode,
+        "pendingRequests": {},
+        "rolesFilled": {},
+      },
+      "summonerID": localStorage.getItem("summonerID")
     }).then( response => {
       navigate(`/teamPage?teamID=${response.data["id"]}`);
     })

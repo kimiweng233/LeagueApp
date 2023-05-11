@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 
-import TournamentBracket from "../components/tournamentBracket";
+import TournamentBracket from '../components/Tournaments Display/tournamentBracket'
 import LoginGuard from '../components/loginGuard';
 
 import services from '../services'
@@ -16,7 +16,7 @@ function TournamentMenu() {
             console.log(response.data);
             settournamentData(response.data["tournament"])
         })
-    }, [])
+    }, [searchParams])
 
     return (
         <div>
@@ -26,4 +26,4 @@ function TournamentMenu() {
     );
 }
   
-export default TournamentMenu;
+export default LoginGuard(TournamentMenu);

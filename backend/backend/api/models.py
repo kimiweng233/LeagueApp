@@ -31,10 +31,18 @@ class Team(models.Model):
     teamAcronym = models.TextField(max_length=3, default="NUL", unique=True)
     tournament = models.ForeignKey(Tournament, related_name="teams", on_delete=models.CASCADE)
     teamJoiningMode = models.TextField(max_length=12, choices=TEAM_JOINING_MODES, default="public")
-    members = models.JSONField(default=dict)
+    pendingRequests = models.JSONField(default=dict)
+    rolesFilled = models.JSONField(default={
+        "Top": "",
+        "Jungle": "",
+        "Mid": "",
+        "Bot": "",
+        "Support": "",
+    })
 
-class RegisteredSummoner(models.Model):
+class Summoner(models.Model):
 
     summonerID = models.TextField(max_length=16, default="No Name", unique=True)
-    registeredTournaments = models.JSONField(default=dict)
-    registeredTeams = models.JSONField(default=dict)
+    accountID = models.TextField(default="No ID")
+    registeredTournaments = models.ManyToManyField(Tournament)
+    registeredTeams = models.ManyToManyField(Team)

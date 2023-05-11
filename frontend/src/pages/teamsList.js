@@ -3,7 +3,7 @@ import { useSearchParams } from "react-router-dom";
 
 import services from '../services'
 
-import TeamListing from "../components/teamListing"
+import OpenTeam from '../components/Teams Display/openTeam'
 import LoginGuard from '../components/loginGuard';
 
 function TeamsList() {
@@ -15,15 +15,15 @@ function TeamsList() {
     services.getTeamsList({"id": searchParams.get("tournamentID")}).then(response => {
         setTeamsList(response.data["teams"]);
     })
-  }, [])
+  }, [searchParams])
 
   return (
     <div>
       {teamsList && teamsList.map((team) => {
-        return <TeamListing key={team.id} {...team}/>
+        return <OpenTeam key={team.id} {...team}/>
       })}
     </div>
   );
 }
   
-export default LoginGuard(TeamsList);
+export default LoginGuard (TeamsList);
