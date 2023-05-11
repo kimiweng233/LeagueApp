@@ -54,7 +54,9 @@ def getTeamsList(request):
 def getTeamData(request):
     team = Team.objects.filter(id=request.data["id"]).first()    
     teamData = model_to_dict(team)
-    teamData["members"] = SummonerSerializer(team.summoner_set.all(), many=True).data
+    members = SummonerSerializer(team.summoner_set.all(), many=True).data
+    teamData["members"] = members
+    print(members)
     return Response({"team": teamData})
 
 @api_view(['POST'])

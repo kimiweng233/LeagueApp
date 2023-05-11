@@ -24,7 +24,7 @@ root.render(
           <Route exact path='/createTeam' element={<TeamForm/>} />
           <Route exact path='/teams' element={<TeamsList/>} />
           <Route exact path='/team' element={<TeamMenu/>} />
-          <Route exact path='/tournament' element={<TournamentMenu/>} />
+          <Route exact path='/tournamentPage' element={<TournamentMenu/>} />
           <Route exact path='/linkAccount' element={<LeagueLogin/>} />
           <Route exact path='/joinedTeams' element={<JoinedTeams/>} />
           <Route exact path='/*' element={<Home/>} />

@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from 'react-router-dom';
 
 import services from '../services'
 import LoginGuard from '../components/loginGuard';
@@ -11,6 +12,7 @@ function TournamentForm() {
   const [prizePool, setPrizePool] = useState("");
   const [registrationFee, setRegistrationFee] = useState("");
   const [startTime, setStartTime] = useState("");
+  const navigate = useNavigate();
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -23,6 +25,8 @@ function TournamentForm() {
       "registrationFee": registrationFee,
       "startTime": startTime,
       "teams": {}
+    }).then( response => {
+      navigate("/tournaments")
     })
   };
 

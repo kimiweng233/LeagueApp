@@ -33,9 +33,6 @@ class TournamentSerializer(serializers.ModelSerializer):
 
 class SummonerSerializer(serializers.ModelSerializer):
 
-    # registeredTournaments = TournamentSerializer
-    # registeredTeams = TeamSerializer
-
     class Meta:
         model = Summoner
         fields = ("summonerID",)
