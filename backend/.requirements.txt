@@ -1,4 +1,4 @@
 django=4.1.5
 djangorestframework=3.14.0
 django-cors-headers=3.13.0
-django-cassiopeia=2.1.1
+dotenv

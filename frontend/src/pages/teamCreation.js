@@ -19,12 +19,17 @@ function TeamForm() {
         "teamAcronym": teamAcronym,
         "tournament": searchParams.get("tournamentID"),
         "teamJoiningMode": teamJoiningMode,
-        "pendingRequests": {},
-        "rolesFilled": {},
+        "rolesFilled": {
+          "Top": null,
+          "Jungle": null,
+          "Mid": null,
+          "Bot": null,
+          "Support": null,
+        },
       },
       "summonerID": localStorage.getItem("summonerID")
     }).then( response => {
-      navigate(`/teamPage?teamID=${response.data["id"]}`);
+      navigate(`/team?teamID=${response.data["id"]}`);
     })
   };
 

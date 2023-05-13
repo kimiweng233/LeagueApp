@@ -40,6 +40,14 @@ const getTeamsJoined = (data) => {
   return http.post(`/getTeamsJoined/`, data);
 };
 
+const changeTeamRole = (data) => {
+  return http.post(`/changeTeamRole/`, data);
+};
+
+const requestJoin = (data) => {
+  return http.post(`/requestJoin/`, data);
+};
+
 const functions = {
   getTournamentsList,
   createTournament,
@@ -51,6 +59,8 @@ const functions = {
   joinTeam,
   getTournamentsJoined,
   getTeamsJoined,
+  changeTeamRole,
+  requestJoin,
 };
 
 export default functions

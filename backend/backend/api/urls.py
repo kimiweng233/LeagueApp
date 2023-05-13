@@ -12,4 +12,6 @@ urlpatterns = [
     path('joinTeam/', views.joinTeam),
     path('getTournamentsJoined/', views.getTournamentsJoined),
     path('getTeamsJoined/', views.getTeamsJoined),
+    path('changeTeamRole/', views.changeTeamRole),
+    path('requestJoin/', views.requestJoin),
 ]

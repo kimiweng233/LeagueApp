@@ -9,7 +9,10 @@ from .models import Tournament, Team, Summoner
 import requests
 
 RIOT_API_ROOT="https://na1.api.riotgames.com"
-RIOT_API_KEY="RGAPI-ea954643-f0f3-44c9-889c-bef8edec8406"
+RIOT_API_KEY="RGAPI-52d25333-d8f0-47e2-880f-e316b83af76e"
+
+def apiHelper(apiEndPoint, apiParam):
+    return requests.get(RIOT_API_ROOT + apiEndPoint + apiParam + "?api_key=" + RIOT_API_KEY)
 
 @api_view(['GET'])
 def getTournamentsList(request):
@@ -55,9 +58,22 @@ def getTeamData(request):
     team = Team.objects.filter(id=request.data["id"]).first()    
     teamData = model_to_dict(team)
     members = SummonerSerializer(team.summoner_set.all(), many=True).data
-    teamData["members"] = members
-    print(members)
+    requests = SummonerSerializer(team.requests.all(), many=True).data
+    teamData["members"] = getSummonerInfo(members)
+    teamData["requests"] = getSummonerInfo(requests)
     return Response({"team": teamData})
+
+def getSummonerInfo(summoners):
+    out = summoners
+    for summoner in out:
+        accountInfo = apiHelper("/lol/league/v4/entries/by-summoner/", summoner["accountID"]).json()
+        for queue in accountInfo:
+            if queue["queueType"] == "RANKED_SOLO_5x5":
+                summoner["rank"] = queue["tier"]
+                break
+        else:
+            summoner["rank"] = None
+    return out
 
 @api_view(['POST'])
 def getTournamentData(request):
@@ -85,6 +101,8 @@ def joinTeam(request):
     team = Team.objects.get(pk=request.data["teamID"])
     summoner.registeredTeams.add(team)
     summoner.registeredTournaments.add(team.tournament)
+    if summoner.requestedTeams.filter(pk=team.pk).exists():
+        summoner.requestedTeams.remove(team)
     summoner.save()
     return Response(200)
 
@@ -99,3 +117,21 @@ def getTeamsJoined(request):
     summoner = Summoner.objects.filter(summonerID=request.data["summonerID"]).first()
     serializer = TeamSerializer(summoner.registeredTeams, many=True)
     return Response(serializer.data)
+
+@api_view(['POST'])
+def changeTeamRole(request):
+    team = Team.objects.filter(id=request.data["teamID"]).first()
+    for role, summoner in team.rolesFilled.items():
+        if summoner == request.data["summonerID"]:
+            team.rolesFilled[role] = None
+    team.rolesFilled[request.data["newRole"]] = request.data["summonerID"]
+    team.save()
+    return Response(200)
+
+@api_view(['POST'])
+def requestJoin(request):
+    summoner = Summoner.objects.filter(summonerID=request.data["summonerID"]).first()
+    team = Team.objects.get(pk=request.data["teamID"])
+    summoner.requestedTeams.add(team)
+    summoner.save()
+    return Response(200)

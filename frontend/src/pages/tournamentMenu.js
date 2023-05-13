@@ -12,9 +12,7 @@ function TournamentMenu() {
     const [searchParams] = useSearchParams();
 
     useEffect(() => {
-        console.log("hmm")
         services.getTournamentData({"id": searchParams.get("tournamentID")}).then(response => {
-            console.log(response.data);
             settournamentData(response.data["tournament"])
         })
     }, [searchParams])

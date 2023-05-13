@@ -13,7 +13,6 @@ class TeamSerializer(serializers.ModelSerializer):
 
     tournament = serializers.CharField()
     rolesFilled = JSONSerializerField()
-    pendingRequests = JSONSerializerField()
 
     class Meta:
         model = Team
@@ -35,4 +34,4 @@ class SummonerSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Summoner
-        fields = ("summonerID",)
+        fields = ("summonerID", "accountID")

@@ -10,9 +10,9 @@ function TeamListing(props) {
 
     const joinTeamButton = (props) => {
         if (props.teamJoiningMode === "public") {
-            return <button onClick={props.onCLick}>Join</button>
+            return <button onClick={props.onClick}>Join</button>
         } else if (props.teamJoiningMode === "request-only") {
-            return <button onClick={props.onCLick}>Send Request</button>
+            return <button onClick={props.onClick}>Send Request</button>
         }
     }
 
@@ -21,11 +21,13 @@ function TeamListing(props) {
             return {
                 onClick: () => services.joinTeam({"summonerID": localStorage.getItem("summonerID"), "teamID": props.id}).then(
                     navigate(`/team?teamID=${props.id}`)
-                )
+                ),
+                teamJoiningMode: props.teamJoiningMode
             }
         } else if (props.teamJoiningMode === "request-only") {
             return {
-                onClick: () => console.log("meow meow")
+                onClick: () => services.requestJoin({"summonerID": localStorage.getItem("summonerID"), "teamID": props.id}),
+                teamJoiningMode: props.teamJoiningMode
             }
         }
     }
