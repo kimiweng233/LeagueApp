@@ -1,66 +1,120 @@
 import http from "./http-common";
 
 const getTournamentsList = () => {
-  return http.get(`/getTournamentsList/`);
+    return http.get(`/getTournamentsList/`).then((response) => {
+        return response.data;
+    });
 };
 
 const createTournament = (data) => {
-  return http.post(`/createTournament/`, data);
+    return http.post(`/createTournament/`, data);
 };
 
 const createTeam = (data) => {
-  return http.post(`/createTeam/`, data);
-};
-
-const getTeamsList = (data) => {
-  return http.post(`/getTeamsList/`, data);
+    return http.post(`/createTeam/`, data);
 };
 
 const getTeamData = (data) => {
-  return http.post(`/getTeamData/`, data);
+    return http.post(`/getTeamData/`, data).then((response) => {
+        return response.data;
+    });
 };
 
 const getTournamentData = (data) => {
-  return http.post(`/getTournamentData/`, data);
+    return http.post(`/getTournamentData/`, data);
 };
 
 const summonerLogin = (data) => {
-  return http.post(`/summonerLogin/`, data);
+    return http.post(`/summonerLogin/`, data);
 };
 
 const joinTeam = (data) => {
-  return http.post(`/joinTeam/`, data);
+    return http.post(`/joinTeam/`, data);
 };
 
 const getTournamentsJoined = (data) => {
-  return http.post(`/getTournamentsJoined/`, data);
+    return http.post(`/getTournamentsJoined/`, data).then((response) => {
+        return response.data;
+    });
 };
 
 const getTeamsJoined = (data) => {
-  return http.post(`/getTeamsJoined/`, data);
+    return http.post(`/getTeamsJoined/`, data).then((response) => {
+        return response.data;
+    });
 };
 
 const changeTeamRole = (data) => {
-  return http.post(`/changeTeamRole/`, data);
+    return http.post(`/changeTeamRole/`, data);
+};
+
+const removeTeamRole = (data) => {
+    return http.post(`/removeTeamRole/`, data);
 };
 
 const requestJoin = (data) => {
-  return http.post(`/requestJoin/`, data);
+    return http.post(`/requestJoin/`, data);
+};
+
+const rejectJoinRequest = (data) => {
+    return http.post(`/rejectJoinRequest/`, data);
+};
+
+const checkIfJoinedTournament = (data) => {
+    return http.post(`/checkIfJoinedTournament/`, data).then((response) => {
+        return response.data;
+    });
+};
+
+const removeFromTeam = (data) => {
+    return http.post(`/removeFromTeam/`, data);
+};
+
+const updateSummonerInfo = (data) => {
+    return http.post(`/updateSummonerInfo/`, data);
+};
+
+const changeTeamJoiningMode = (data) => {
+    return http.post(`/changeTeamJoiningMode/`, data).then((response) => {
+        return response.data;
+    });
+};
+
+const checkIfRequestedTeam = (data) => {
+    return http.post(`/checkIfRequestedTeam/`, data);
+};
+
+const getTeamsWithVacancy = (data) => {
+    return http.post(`/getTeamsWithVacancy/`, data).then((response) => {
+        return response.data;
+    });
+};
+
+const quickJoin = (data) => {
+    return http.post(`/quickJoin/`, data);
 };
 
 const functions = {
-  getTournamentsList,
-  createTournament,
-  createTeam,
-  getTeamsList,
-  getTeamData,
-  getTournamentData,
-  summonerLogin,
-  joinTeam,
-  getTournamentsJoined,
-  getTeamsJoined,
-  changeTeamRole,
-  requestJoin,
+    getTournamentsList,
+    createTournament,
+    createTeam,
+    getTeamData,
+    getTournamentData,
+    summonerLogin,
+    joinTeam,
+    getTournamentsJoined,
+    getTeamsJoined,
+    changeTeamRole,
+    removeTeamRole,
+    requestJoin,
+    checkIfJoinedTournament,
+    removeFromTeam,
+    updateSummonerInfo,
+    changeTeamJoiningMode,
+    checkIfRequestedTeam,
+    getTeamsWithVacancy,
+    quickJoin,
+    rejectJoinRequest,
 };
 
-export default functions
+export default functions;

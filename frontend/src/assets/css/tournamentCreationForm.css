@@ -1,0 +1,289 @@
+h2 {
+    margin-right: 20px;
+    white-space: nowrap;
+}
+
+.formWrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.tournamentForm {
+    width: 70%;
+    background-color: #284e60;
+    padding: 40px;
+    margin-top: 50px;
+    border-style: solid;
+    border-color: #def4ff;
+    border-radius: 25px;
+    border-width: 5px;
+    box-shadow: 0 0 20px #fff, 0 0 30px #65bdf0, 0 0 40px #2458ab,
+        0 0 50px #174082, 0 0 60px #0c2c61, inset 0 0 5px #fff,
+        inset 0 0 20px #65bdf0, inset 0 0 9px #2458ab, inset 0 0 11px #174082,
+        inset 0 0 13px #0c2c61;
+    color: white;
+    margin-bottom: 50px;
+}
+
+.labelInputWrapper {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    width: 100%;
+}
+
+.inputRowWrapper {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: stretch;
+    margin-bottom: 10px;
+}
+
+.buttonRowWrapper {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    margin-top: 30px;
+}
+
+.formTitleInputField {
+    background-color: #1c3441 !important;
+}
+
+.formInputField {
+    width: 100%;
+    flex-shrink: 1;
+
+    background-color: #203c4b;
+    border-color: #285367;
+    border-style: inset;
+    border-width: 3px;
+    border-radius: 10px;
+    padding: 10px;
+    color: white;
+    font-size: 20px;
+    box-shadow: inset 0px 0px 20px #060a0b;
+}
+
+.formInputField:focus {
+    outline-width: 0;
+    outline: none;
+    box-shadow: inset 0px 0px 10px #2f84ac !important;
+    box-shadow: inset 0px 0px 20px #2796ca !important;
+}
+
+.formInputField:hover {
+    outline-width: 0;
+    outline: none;
+    box-shadow: inset 0px 0px 10px #2f84ac !important;
+    box-shadow: inset 0px 0px 20px #2796ca !important;
+}
+
+.formInfoBackground {
+    background-color: #1c3441;
+    border-style: inset;
+    border-color: #346a86;
+    border-radius: 10px;
+    border-width: 3px;
+    box-shadow: inset 0px 0px 20px #060a0b;
+}
+
+.formTitleFieldWrapper {
+    padding: 20px;
+}
+
+.tournamentFormDetails {
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: stretch;
+    padding: 20px;
+}
+
+.tournamentFormDetails div:not(:last-child) {
+    margin-bottom: 20px;
+}
+
+.tournamentFormDescriptionWrapper {
+    width: 50%;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-self: stretch;
+    flex-grow: 1;
+}
+
+.tournamentFormDescription {
+    flex-grow: 1;
+}
+
+.formDescriptionField {
+    width: 100%;
+}
+
+.formInputFieldLabel {
+    font-style: italic;
+    flex-shrink: 0;
+    text-shadow: 1px 1px 1px skyblue;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type="number"] {
+    -moz-appearance: textfield;
+}
+
+.clockIcon {
+    font-size: 2em;
+    margin-right: 20px;
+    stroke-width: 0.4;
+}
+
+.submitButtonLocked {
+    background-color: #542424c6 !important;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.376), 0 0 13px #f589896c,
+        0 0 15px #f2666662, 0 0 17px #ff383866, 0 0 19px #9c191948,
+        inset 0 0 10px rgba(255, 255, 255, 0.358), inset 0 0 15px #f5898951,
+        inset 0 0 20px #f2666655, inset 0 0 25px #ff38385a,
+        inset 0 0 30px #9c19195c;
+}
+
+.submitButtonUnlocked {
+    background-color: #65bdf0 !important;
+    box-shadow: 0 0 10px #fff, 0 0 13px #a3ddff, 0 0 15px #65bdf0,
+        0 0 17px #2458ab, 0 0 19px #174082, 0 0 21px #0c2c61,
+        inset 0 0 10px #fff, inset 0 0 13px #a3ddff, inset 0 0 15px #65bdf0,
+        inset 0 0 17px #2458ab, inset 0 0 19px #174082, inset 0 0 21px #0c2c61;
+}
+
+.submitButtonUnlocked:hover {
+    background-color: #6cb1d8 !important;
+    box-shadow: 0 0 10px #fff, 0 0 20px #a3ddff, 0 0 30px #65bdf0,
+        0 0 40px #2458ab, 0 0 50px #174082, 0 0 60px #0c2c61,
+        inset 0 0 10px #fff, inset 0 0 5px #a3ddff, inset 0 0 10px #65bdf0,
+        inset 0 0 15px #2458ab, inset 0 0 15px #174082;
+}
+
+.submitButton:active {
+    background-color: #5184a2 !important;
+    border-color: lightgrey;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.714), 0 0 20px #a3ddffb9,
+        0 0 30px #65bdf0c1, 0 0 40px #2458abbc, 0 0 50px #174082c1,
+        0 0 60px #0c2d61cd, inset 0 0 10px rgba(255, 255, 255, 0.833),
+        inset 0 0 5px #a3ddffd4, inset 0 0 10px #65bdf0db,
+        inset 0 0 15px #2458abcf, inset 0 0 15px #174082d9,
+        inset 0 0 15px #0c2d61d6;
+}
+
+.submitButton {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background-color: #284e60;
+    border-color: white;
+    border-width: 4px;
+    border-style: solid;
+    padding: 0px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: lighter;
+    white-space: nowrap;
+}
+
+.plusIcon {
+    margin: 0;
+    padding: 0;
+    font-size: 70px;
+    position: relative;
+    bottom: 2px;
+    color: #ddf4ff;
+}
+
+.tournamentNameTitle {
+    white-space: nowrap;
+    font-style: italic;
+    text-shadow: 4px 4px 3px skyblue;
+}
+
+.tournamentFormSectionTitleBlue {
+    white-space: nowrap;
+    text-shadow: 0 0 7px #fff, 0 0 10px #a3ddff, 0 0 13px #65bdf0,
+        0 0 16px #2458ab, 0 0 19px #174082, 0 0 22px #0c2c61;
+}
+
+.tournamentFormTitleSectionWrapper {
+    width: 80%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.tournamentFormSectionTitleDividerBarsBlueLeft {
+    border-top: 3px solid white;
+    width: 40%;
+    margin-right: 20px;
+    box-shadow: 0 0 10px #fff, 0 0 20px #a3ddff, 0 0 30px #65bdf0,
+        0 0 40px #2458ab, 0 0 50px #174082, 0 0 60px #0c2c61;
+}
+
+.tournamentFormSectionTitleDividerBarsBlueRight {
+    border-top: 3px solid white;
+    width: 40%;
+    margin-left: 20px;
+    box-shadow: 0 0 10px #fff, 0 0 20px #a3ddff, 0 0 30px #65bdf0,
+        0 0 40px #2458ab, 0 0 50px #174082, 0 0 60px #0c2c61;
+}
+
+@media (max-width: 1000px) {
+    .inputRowWrapper {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: stretch;
+    }
+
+    .tournamentFormDetails {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: stretch;
+        padding: 20px;
+    }
+
+    .tournamentFormDetails {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: stretch;
+        padding: 20px;
+    }
+
+    .tournamentFormDescriptionWrapper {
+        width: 100%;
+        padding: 20px;
+        padding-top: 0px;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .tournamentFormDescription {
+        height: 200px;
+    }
+}

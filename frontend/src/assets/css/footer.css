@@ -1,0 +1,16 @@
+.footerWrapper {
+    height: 20vh;
+    width: 100%;
+    background-color: #212529;
+    margin-top: 40px;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.discordSymbol {
+    font-size: 1.5em;
+    position: relative;
+    bottom: 2px;
+}

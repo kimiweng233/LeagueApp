@@ -1,0 +1,74 @@
+.loginForm {
+    width: 40%;
+    background-color: #284e60;
+    padding: 40px;
+    margin-top: 50px;
+    border-style: solid;
+    border-color: #def4ff;
+    border-radius: 25px;
+    border-width: 5px;
+    box-shadow: 0 0 20px #fff, 0 0 30px #65bdf0, 0 0 40px #2458ab,
+        0 0 50px #174082, 0 0 60px #0c2c61, inset 0 0 5px #fff,
+        inset 0 0 20px #65bdf0, inset 0 0 9px #2458ab, inset 0 0 11px #174082,
+        inset 0 0 13px #0c2c61;
+    color: white;
+    margin-bottom: 50px;
+}
+
+.loginInputWrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    gap: 20px;
+}
+
+.textNoButtomMargin {
+    margin-bottom: 0;
+}
+
+.linkAccountButtonBase {
+    border: 3px white solid;
+    border-radius: 10px;
+    font-size: 30px;
+    color: white;
+    padding: 5px 10px 5px 10px;
+    width: 40%;
+}
+
+.linkAccountButton {
+    background-color: #3f7ea3;
+    box-shadow: 0 0 10px #fff, 0 0 13px #a3ddff, 0 0 15px #65bdf0,
+        0 0 17px #2458ab, 0 0 19px #174082, 0 0 21px #0c2c61,
+        inset 0 0 10px #fff, inset 0 0 13px #a3ddff, inset 0 0 15px #65bdf0,
+        inset 0 0 17px #2458ab, inset 0 0 19px #174082, inset 0 0 21px #0c2c61;
+}
+
+.linkAccountButton:hover {
+    background-color: #6cb1d8 !important;
+    box-shadow: 0 0 10px #fff, 0 0 20px #a3ddff, 0 0 30px #65bdf0,
+        0 0 40px #2458ab, 0 0 50px #174082, 0 0 60px #0c2c61,
+        inset 0 0 10px #fff, inset 0 0 5px #a3ddff, inset 0 0 10px #65bdf0,
+        inset 0 0 15px #2458ab, inset 0 0 15px #174082;
+}
+
+.linkAccountButton:active {
+    background-color: #5184a2 !important;
+    border-color: lightgrey;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.714), 0 0 20px #a3ddffb9,
+        0 0 30px #65bdf0c1, 0 0 40px #2458abbc, 0 0 50px #174082c1,
+        0 0 60px #0c2d61cd, inset 0 0 10px rgba(255, 255, 255, 0.833),
+        inset 0 0 5px #a3ddffd4, inset 0 0 10px #65bdf0db,
+        inset 0 0 15px #2458abcf, inset 0 0 15px #174082d9,
+        inset 0 0 15px #0c2d61d6;
+}
+
+.linkAccountButtonLocked {
+    background-color: #542424c6 !important;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.376), 0 0 13px #f589896c,
+        0 0 15px #f2666662, 0 0 17px #ff383866, 0 0 19px #9c191948,
+        inset 0 0 10px rgba(255, 255, 255, 0.358), inset 0 0 15px #f5898951,
+        inset 0 0 20px #f2666655, inset 0 0 25px #ff38385a,
+        inset 0 0 30px #9c19195c;
+}

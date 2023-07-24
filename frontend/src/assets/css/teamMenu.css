@@ -1,0 +1,550 @@
+.teamMenuWrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.teamMenu {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 70%;
+    background-color: #284e60;
+    padding: 60px;
+    margin-top: 50px;
+    border-style: solid;
+    border-color: #def4ff;
+    border-radius: 25px;
+    border-width: 5px;
+    box-shadow: 0 0 20px #fff, 0 0 30px #65bdf0, 0 0 40px #2458ab,
+        0 0 50px #174082, 0 0 60px #0c2c61, inset 0 0 5px #fff,
+        inset 0 0 20px #65bdf0, inset 0 0 9px #2458ab, inset 0 0 11px #174082,
+        inset 0 0 13px #0c2c61;
+    color: white;
+    margin-bottom: 50px;
+}
+
+.teamMenuComponent {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+.coupledElements {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.teamTitleFont {
+    font-style: italic;
+    flex-shrink: 0;
+    text-shadow: 2px 2px 1px skyblue, 0px 0px 5px white;
+    white-space: nowrap;
+}
+
+.teamName {
+    margin-right: 20px;
+}
+
+.teamMenuButton {
+    font-size: 1.2em;
+    cursor: pointer;
+}
+
+.teamMenuButton path {
+    stroke: white;
+}
+
+.copyButtonWrapper {
+    position: relative;
+    bottom: 9.5px;
+    margin-left: 10px;
+}
+
+.refreshButtonWrapper {
+    position: relative;
+    bottom: 9.5px;
+    margin-left: 3px;
+}
+
+.teamInviteCode {
+    margin-left: 10px;
+    background-color: #203c4b;
+    border-color: #296a88;
+    border-style: inset;
+    border-width: 3px;
+    border-radius: 10px;
+    padding-top: 1px;
+    padding-bottom: 1px;
+    padding-left: 5px;
+    padding-right: 5px;
+    color: white;
+    font-size: 20px;
+    box-shadow: inset 0px 0px 20px #000000;
+}
+
+.teamMenuTopSection {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.teamJoiningModeButtonsSet {
+    width: 100%;
+    align-self: center;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.teamJoiningModeButton {
+    width: 33%;
+    height: 3em;
+    font-size: 15px;
+    font-weight: 500;
+    padding: 10px 20px;
+    white-space: nowrap;
+    padding: 0;
+    margin: 0;
+}
+
+.inviteCodeSection {
+    margin-left: 5px;
+}
+
+.leaveTeamButton {
+    margin-right: 30px;
+    position: relative;
+    bottom: 10px;
+    background-color: transparent;
+    border: 5px white solid;
+    border-radius: 10px;
+    font-size: 30px;
+    color: white;
+    padding: 5px 10px 5px 10px;
+}
+
+.teamTitleSection {
+    margin-left: 30px;
+}
+
+.teamMemberCardsWrapper {
+    margin-top: 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 95%;
+}
+
+.teamMemberCardSectionWrapper {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.teamMemberCardsButtons {
+    align-self: flex-end;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-end;
+    margin-right: 1em;
+    margin-bottom: 0.5em;
+}
+
+.teamMemberCardSectionTitle {
+    float: left;
+    white-space: nowrap;
+    text-shadow: 0 0 3px #fff, 0 0 5px #a3ddff, 0 0 7px #65bdf0, 0 0 9px #2458ab,
+        0 0 11px #174082;
+    margin-left: 0.5em;
+    margin-right: 0.2em;
+}
+
+.teamMemberCardSectionDivider {
+    flex-grow: 1;
+    border-top: 3px solid white;
+    margin-right: 8px;
+    box-shadow: 0 0 10px #fff, 0 0 20px #a3ddff, 0 0 30px #65bdf0,
+        0 0 40px #2458ab, 0 0 50px #174082, 0 0 60px #0c2c61;
+    position: relative;
+    top: 7px;
+}
+
+.massCollapseButton {
+    font-size: 1.3em;
+    margin-right: 0.3em;
+    position: relative;
+    top: 3px;
+}
+
+.sortMembersWrapper {
+    display: flex;
+    flex-direction: row;
+    margin-right: 0.5em;
+    cursor: pointer;
+}
+
+.sortMemebersButton {
+    font-size: 1.5em;
+    position: relative;
+    top: 1px;
+}
+
+.sortMembersText {
+    margin-bottom: 0;
+}
+
+.teamMemberCards {
+    padding: 3em;
+    padding-top: 1em;
+    width: 100%;
+}
+
+.teamMemberCard {
+    width: 100%;
+    padding-top: 30px;
+    display: flex;
+    flex-direction: column;
+}
+
+.teamMemberCardContent {
+    padding: 0px 10px 0px 10px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.memberCardDivider {
+    width: 100%;
+    margin-top: 6px;
+    border-top: 2px solid white;
+}
+
+.memberCardPfp {
+    position: relative;
+    bottom: 3px;
+    height: 3em;
+    width: auto;
+    border-radius: 50%;
+    margin-right: 20px;
+    border-radius: 2px solid white;
+}
+
+.greenHalo {
+    box-shadow: 0 0 5px #fff, 0 0 7px #c3ffc3, 0 0 9px #9beb9b, 0 0 11px #52bf52,
+        0 0 13px #1c851c, 0 0 15px #0a710a, inset 0 0 5px #fff,
+        inset 0 0 7px #c3ffc3, inset 0 0 9px #9beb9b, inset 0 0 11px #52bf52,
+        inset 0 0 13px #1c851c, inset 0 0 15px #0a710a;
+}
+
+.greenTextHalo {
+    text-shadow: 0 0 5px #fff, 0 0 7px #c3ffc3, 0 0 9px #9beb9b,
+        0 0 11px #52bf52, 0 0 13px #1c851c, 0 0 15px #0a710a;
+}
+
+.greenHighlight:hover {
+    background-image: linear-gradient(
+        rgba(17, 255, 0, 0),
+        rgba(103, 177, 104, 0.584)
+    );
+}
+
+.orangeHalo {
+    box-shadow: 0 0 5px #fff, 0 0 7px #ffddbf, 0 0 9px #ffc089, 0 0 11px #ff9c45,
+        0 0 13px #ff861d, 0 0 15px #b65500, inset 0 0 5px #fff,
+        inset 0 0 7px #ffddbf, inset 0 0 9px #ffc089, inset 0 0 11px #ff9c45,
+        inset 0 0 13px #ff861d, inset 0 0 15px #b65500;
+}
+
+.orangeTextHalo {
+    text-shadow: 0 0 5px #fff, 0 0 7px #ffddbf, 0 0 9px #ffc089,
+        0 0 11px #ff9c45, 0 0 13px #ff861d, 0 0 15px #b65500;
+}
+
+.orangeHighlight:hover {
+    background-image: linear-gradient(
+        rgba(17, 255, 0, 0),
+        rgba(255, 149, 0, 0.584)
+    );
+}
+
+.blueHalo {
+    box-shadow: 0 0 5px #fff, 0 0 7px #a3ddff, 0 0 9px #65bdf0, 0 0 11px #2458ab,
+        0 0 13px #174082, 0 0 15px #0c2c61, inset 0 0 5px #fff,
+        inset 0 0 7px #a3ddff, inset 0 0 9px #65bdf0, inset 0 0 11px #2458ab,
+        inset 0 0 13px #174082, inset 0 0 15px #0c2c61;
+}
+
+.blueTextHalo {
+    text-shadow: 0 0 5px #fff, 0 0 7px #a3ddff, 0 0 9px #65bdf0,
+        0 0 11px #2458ab, 0 0 13px #174082, 0 0 15px #0c2c61;
+}
+
+.blueButtonHalo {
+    text-shadow: 0 0 3px #fff, 0 0 5px #a3ddff, 0 0 7px #65bdf0, 0 0 9px #2458ab,
+        0 0 11px #174082, 0 0 13px #0c2c61;
+    box-shadow: 0 0 3px #fff, 0 0 5px #a3ddff, 0 0 7px #65bdf0, 0 0 9px #2458ab,
+        0 0 11px #174082, 0 0 13px #0c2c61, inset 0 0 3px #fff,
+        inset 0 0 5px #a3ddff, inset 0 0 7px #65bdf0, inset 0 0 9px #2458ab,
+        inset 0 0 11px #174082, inset 0 0 13px #0c2c61;
+}
+
+.blueButtonHalo:hover {
+    text-shadow: 0 0 5px #fff, 0 0 7px #a3ddff, 0 0 9px #65bdf0,
+        0 0 11px #2458ab, 0 0 13px #174082, 0 0 15px #0c2c61;
+    box-shadow: 0 0 5px #fff, 0 0 7px #a3ddff, 0 0 9px #65bdf0, 0 0 11px #2458ab,
+        0 0 13px #174082, 0 0 15px #0c2c61, inset 0 0 5px #fff,
+        inset 0 0 7px #a3ddff, inset 0 0 9px #65bdf0, inset 0 0 11px #2458ab,
+        inset 0 0 13px #174082, inset 0 0 15px #0c2c61;
+}
+
+.blueButtonHalo:active {
+    text-shadow: 0 0 3px rgba(255, 255, 255, 0.443), 0 0 5px #a3ddff7a,
+        0 0 7px #65bdf07c, 0 0 9px #2458ab77, 0 0 11px #1740827e,
+        0 0 13px #0c2d616f;
+    box-shadow: 0 0 3px rgba(255, 255, 255, 0.443), 0 0 5px #a3ddff7a,
+        0 0 7px #65bdf07c, 0 0 9px #2458ab77, 0 0 11px #1740827e,
+        0 0 13px #0c2d616f, inset 0 0 3px rgba(255, 255, 255, 0.443),
+        inset 0 0 5px #a3ddff7a, inset 0 0 7px #65bdf07c,
+        inset 0 0 9px #2458ab77, inset 0 0 11px #1740827e,
+        inset 0 0 13px #0c2d616f;
+}
+
+.blueHighlight:hover {
+    background-image: linear-gradient(
+        rgba(255, 255, 255, 0),
+        rgba(140, 180, 236, 0.371)
+    );
+}
+
+.redHalo {
+    box-shadow: 0 0 5px #fff, 0 0 7px #ffc7c7, 0 0 9px #e89b9b, 0 0 11px #c84b4b,
+        0 0 13px #b32a2a, 0 0 15px #8c1212, inset 0 0 5px #fff,
+        inset 0 0 7px #ffc7c7, inset 0 0 9px #e89b9b, inset 0 0 11px #c84b4b,
+        inset 0 0 13px #b32a2a, inset 0 0 15px #8c1212;
+}
+
+.redTextHalo {
+    text-shadow: 0 0 5px #fff, 0 0 7px #ffc7c7, 0 0 9px #e89b9b,
+        0 0 11px #c84b4b, 0 0 13px #b32a2a, 0 0 15px #8c1212;
+}
+
+.redHighlight:hover {
+    background-image: linear-gradient(
+        rgba(255, 255, 255, 0),
+        rgba(189, 111, 111, 0.67)
+    );
+}
+
+.redButtonHalo {
+    text-shadow: 0 0 5px rgb(255, 255, 255), 0 0 7px #f58989, 0 0 9px #f26666,
+        0 0 11px #ff3838, 0 0 13px #9c1919;
+    box-shadow: 0 0 5px rgb(255, 255, 255), 0 0 7px #f58989, 0 0 9px #f26666,
+        0 0 11px #ff3838, 0 0 13px #9c1919, inset 0 0 5px rgb(255, 255, 255),
+        inset 0 0 7px #f58989, inset 0 0 9px #f26666, inset 0 0 11px #ff3838,
+        inset 0 0 13px #9c1919;
+}
+
+.redButtonHalo:hover {
+    text-shadow: 0 0 10px rgb(255, 255, 255), 0 0 13px #f58989, 0 0 16px #f26666,
+        0 0 19px #ff3838, 0 0 21px #9c1919;
+    box-shadow: 0 0 10px rgb(255, 255, 255), 0 0 13px #f58989, 0 0 16px #f26666,
+        0 0 19px #ff3838, 0 0 21px #9c1919, inset 0 0 10px rgb(255, 255, 255),
+        inset 0 0 13px #f58989, inset 0 0 16px #f26666, inset 0 0 19px #ff3838,
+        inset 0 0 21px #9c1919;
+}
+
+.redButtonHalo:active {
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.171), 0 0 13px #f5898929,
+        0 0 16px #f266662a, 0 0 19px #ff38382c, 0 0 21px #9c19191f;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.376),
+        0 0 13px rgba(245, 137, 137, 0.202), 0 0 16px #f266662a,
+        0 0 19px #ff383832, 0 0 21px #9c19191f,
+        inset 0 0 10px rgba(255, 255, 255, 0.172), inset 0 0 13px #f5898922,
+        inset 0 0 16px #f2666624, inset 0 0 19px #ff383823,
+        inset 0 0 32px #9c191929;
+}
+
+.memberCardSummonerID {
+    text-decoration: none;
+    cursor: pointer;
+    outline: none;
+    color: inherit;
+}
+
+.memberCardPositionEmblem {
+    height: 2.5em;
+    width: auto;
+}
+
+.memberCardPfpWrapper {
+    width: 50%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.memberCardPositionEmblemWrapper {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 40%;
+}
+
+.memberCardKickButton {
+    background-color: transparent;
+    border: 2px white solid;
+    border-radius: 10px;
+    color: white;
+    padding: 5px 10px 5px 10px;
+    position: relative;
+    bottom: 5px;
+}
+
+.memberCardAddPositionSign {
+    position: relative;
+    bottom: 6px;
+    left: 9px;
+    padding: 0px;
+    margin: 0px;
+    font-size: 60px;
+    font-weight: 100;
+    color: white;
+    line-height: 30px;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.171), 0 0 13px #f5898929,
+        0 0 16px #f266662a, 0 0 19px #ff38382c, 0 0 21px #9c19191f;
+}
+
+.userSelectRolePanelWrapper {
+    padding: 1px;
+    background: linear-gradient(
+        to right,
+        rgba(4, 255, 0, 0.628),
+        rgb(202, 255, 204)
+    );
+    border-radius: 5px;
+    box-shadow: 0 0 5px #fff, 0 0 7px #c3ffc3, 0 0 9px #9beb9b, 0 0 11px #52bf52,
+        0 0 13px #1c851c, 0 0 15px #0a710a;
+}
+
+.userSelectRolePanel {
+    border-radius: 5px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    background-color: #203a47;
+    background: linear-gradient(to top, #203a47, #30789c);
+}
+
+.positionSelectionImg {
+    height: 2em;
+    width: auto;
+}
+
+.positionSelectionImgWrapper {
+    padding-top: 4px;
+    padding-bottom: 4px;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+.positionSelectionImgWrapper:hover {
+    background-color: #45acdf90;
+}
+
+.disselectRoleEmblem {
+    height: 2em;
+    width: auto;
+}
+
+.teamMemberCardDetails {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+    margin-top: 15px;
+}
+
+.teamMemberCardDetailsLeft {
+    width: 30%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.memberDetailRankImg {
+    width: 50%;
+    justify-self: center;
+    margin-bottom: 15px;
+}
+
+.teamMemberCardDetailsRightWrapper {
+    width: 60%;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.teamMemberCardChampionMasteryWrapper {
+    flex: 0 0 50%;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.teamMemberCardChampionIcon {
+    width: 3em;
+    height: 3em;
+    border-radius: 50%;
+    margin-right: 1em;
+    border-color: white;
+    border-width: 3px;
+}
+
+.teamMemberCardChampionMasteryLevel {
+    width: 2em;
+    height: 2em;
+    margin-right: 1em;
+}
+
+.blueTextHighlights {
+    text-shadow: 0 0 1px #fff, 0 0 2px #a3ddff, 0 0 3px #65bdf0, 0 0 4px #2458ab,
+        0 0 5px #174082;
+    margin-bottom: 0;
+}
+
+.teamMemberCardContentWrapper {
+    padding-top: 20px;
+}
+
+.memberCardAcceptRequestButton {
+    background-color: transparent;
+    border: 2px white solid;
+    border-radius: 10px;
+    color: white;
+    padding: 5px 10px 5px 10px;
+    position: relative;
+    bottom: 5px;
+    margin-right: 1em;
+}
+
+.memberCardRequestsButtonWrapper {
+    display: flex;
+    flex-direction: row;
+}

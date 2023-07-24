@@ -1,0 +1,67 @@
+.joinedTeamsListWrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.joinedTeamContentWrapper {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 70%;
+    background-color: #284e60;
+    padding: 40px;
+    margin-top: 50px;
+    border-style: solid;
+    border-color: #def4ff;
+    border-radius: 10px;
+    border-width: 5px;
+    box-shadow: 0 0 10px #fff, 0 0 15px #65bdf0, 0 0 20px #2458ab,
+        0 0 25px #174082, 0 0 30px #0c2c61, inset 0 0 10px rgb(17, 30, 60);
+    color: white;
+}
+
+.joinedTeamContentWrapper:hover {
+    background-color: #35667c;
+    box-shadow: 0 0 20px #fff, 0 0 30px #65bdf0, 0 0 40px #2458ab,
+        0 0 50px #174082, 0 0 60px #0c2c61, inset 0 0 15px rgb(32, 49, 90);
+}
+
+.joinedTeamNameWrapper {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5em;
+}
+
+.dateTimeCountdownText {
+    background-color: #203c4b;
+    border-color: #285367;
+    border-style: inset;
+    border-width: 3px;
+    border-radius: 10px;
+    padding: 5px;
+    padding-left: 10px;
+    padding-right: 10px;
+    color: white;
+    box-shadow: inset 0px 0px 20px #060a0b;
+    position: relative;
+    top: 5px;
+}
+
+.joinedTeamsSubmitButton {
+    border-radius: 10px !important;
+    color: white;
+    font-size: 30px;
+}
+
+.JoinedTeamsListWrapper {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
