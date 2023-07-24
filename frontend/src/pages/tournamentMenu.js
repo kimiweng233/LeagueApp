@@ -20,8 +20,8 @@ function TournamentMenu() {
 
     return (
         <div>
-            <p>{tournamentData["tournamentName"]}</p>
-            <TournamentBracket {...tournamentData} />
+            <p>Tournament Bracket</p>
+            {/* <TournamentBracket {...tournamentData} /> */}
         </div>
     );
 }
