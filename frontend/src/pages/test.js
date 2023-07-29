@@ -1,32 +1,13 @@
-function Test(props) {
-    const hmph = () => {
-        return (
-            <div>
-                <button onClick={() => console.log("meow meow")}>
-                    meow meow button
-                </button>
-            </div>
-        );
-    };
-
+export default function Test() {
     return (
-        <div
-            style={{
-                backgroundColor: "#4287f5",
-            }}
-        >
-            <svg width={500} height={500} viewBox={`0 0 500 500`}>
-                <foreignObject width="300" height="300">
-                    <button
-                        onClick={() => console.log("meow meow")}
-                        style={{ width: "100%", height: "100%" }}
-                    >
-                        meow meow button
-                    </button>
-                </foreignObject>
-            </svg>
-        </div>
+        <svg width="500" height="500">
+            <circle
+                cx="250"
+                cy="250"
+                r="250"
+                fill="red"
+                stroke="yellow"
+            ></circle>
+        </svg>
     );
 }
-
-export default Test;

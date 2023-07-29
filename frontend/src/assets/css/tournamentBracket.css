@@ -1,0 +1,167 @@
+.tournamentMenuWrapper {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.tournamentBracketCardOuterWrapper {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.tournamentBracketCardOuterBorder {
+    width: 90%;
+    height: 65%;
+    border-style: outset;
+    border-width: 5px;
+    border-color: #7daec5;
+    box-shadow: 2px 3px 15px #021925;
+}
+
+.tournamentBracketCardWrapper {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding-top: 3px;
+    padding-bottom: 3px;
+    background-color: #37677d;
+    border-style: inset;
+    border-width: 3px;
+    border-color: #91bbcf;
+    box-shadow: inset 0px 0px 10px black;
+}
+
+.ongoingGameHighlight {
+    box-shadow: 0 0 5px #fff, 0 0 7px #d0f065, 0 0 9px #99ab24, 0 0 15px #648217,
+        2px 3px 15px #021925;
+}
+
+.idleGameHighlight {
+    background-color: #47788f56 !important;
+}
+
+.tournamentBracketTeamWrapper {
+    width: 95%;
+    height: 45%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.tournamentBracketTeamWrapper:hover .tournamentBracketTeamCard {
+    background-color: #a7c5d2 !important;
+    cursor: pointer;
+}
+
+.tournamentBracketTeamWrapper:hover .tournamentBracketScoreCard {
+    background-color: #39678a !important;
+}
+
+.tournamentBracketTeamWrapper:hover .tournamentBracketTeamWinHighlight {
+    background-color: #1a658baf !important;
+}
+
+.tournamentBracketTeamWrapper:hover .tournamentBracketScoreWinHighlight {
+    background-color: #133a58a3 !important;
+}
+
+.tournamentBracketTeamWrapper:hover .tournamentBracketTeamLossHighlight {
+    background-color: #d3909062 !important;
+}
+
+.tournamentBracketTeamWrapper:hover .tournamentBracketScoreLossHighlight {
+    background-color: #8633336d !important;
+}
+
+.tournamentBracketTeamWrapper:not(:last-child) {
+    margin-bottom: 3px;
+}
+
+.tournamentBracketTeamCard {
+    height: 100%;
+    width: 75%;
+    background-color: #81abbe;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.tournamentBracketScoreCard {
+    height: 100%;
+    width: 25%;
+    background-color: #294f6d;
+    text-align: center;
+    vertical-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.tournamentBracketTeamText {
+    margin-left: 10px !important;
+}
+
+.tournamentBracketText {
+    margin: 0;
+    padding: 0;
+    text-shadow: 0 0 1px #fff, 0 0 2px #a3ddff, 0 0 3px #65bdf0, 0 0 4px #2458ab,
+        0 0 5px #174082, 0 0 6px #0c2c61;
+}
+
+.tournamentBracketTeamWinHighlight {
+    background-color: #145170af !important;
+}
+
+.tournamentBracketTeamLossHighlight {
+    background-color: #be818162 !important;
+}
+
+.tournamentBracketScoreWinHighlight {
+    background-color: #0c263aa3 !important;
+}
+
+.tournamentBracketScoreLossHighlight {
+    background-color: #6d29296d !important;
+}
+
+.tournamentBracketViewPort {
+    width: 70vw;
+    height: 80vh;
+    border: 5px;
+    border-style: inset;
+    border-color: #4169877f;
+    border-radius: 2px;
+    box-shadow: inset 0px 0px 60px #000000;
+    background-color: #1b3f52;
+    background-image: url("../Textures/black-felt.png");
+    padding: 20px;
+    overflow: auto;
+    scrollbar-width: none;
+}
+
+.tournamentBracketViewPort::-webkit-scrollbar {
+    width: 0;
+}
+
+.flexBoxColumn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+svg line {
+    filter: drop-shadow(0px 0px 1px #ffffff6a)
+        drop-shadow(0px 0px 2px #65bdf07a) drop-shadow(0px 0px 3px #2458ab7a)
+        drop-shadow(0px 0px 4px #17408272) drop-shadow(0px 0px 5px #0c2d6174);
+}

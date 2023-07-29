@@ -22,4 +22,5 @@ urlpatterns = [
     path('checkIfRequestedTeam/', views.checkIfRequestedTeam),
     path('getTeamsWithVacancy/', views.getTeamsWithVacancy),
     path('quickJoin/', views.quickJoin),
+    path('createBracket/', views.createBracket),
 ]

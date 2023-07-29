@@ -53,7 +53,7 @@ const RANK_SD_ARRAY = [
     { tier: "PLATINUM", rank: "I", SD: 1.6 },
     { tier: "DIAMOND", rank: "IV", SD: 1.7 },
     { tier: "DIAMOND", rank: "III", SD: 1.8 },
-    { tier: "DIAMOND", rank: "III", SD: 2 },
+    { tier: "DIAMOND", rank: "II", SD: 2 },
     { tier: "DIAMOND", rank: "I", SD: 2.1 },
     { tier: "MASTER", rank: "I", SD: 2.2 },
     { tier: "GRANDMASTER", rank: "I", SD: 2.2 },

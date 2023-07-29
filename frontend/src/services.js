@@ -21,7 +21,9 @@ const getTeamData = (data) => {
 };
 
 const getTournamentData = (data) => {
-    return http.post(`/getTournamentData/`, data);
+    return http.post(`/getTournamentData/`, data).then((response) => {
+        return response.data;
+    });
 };
 
 const summonerLogin = (data) => {
@@ -94,6 +96,10 @@ const quickJoin = (data) => {
     return http.post(`/quickJoin/`, data);
 };
 
+const createBracket = (data) => {
+    return http.post(`/createBracket/`, data);
+};
+
 const functions = {
     getTournamentsList,
     createTournament,
@@ -115,6 +121,7 @@ const functions = {
     getTeamsWithVacancy,
     quickJoin,
     rejectJoinRequest,
+    createBracket,
 };
 
 export default functions;

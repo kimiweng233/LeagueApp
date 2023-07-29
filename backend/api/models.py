@@ -19,6 +19,7 @@ class Tournament(models.Model):
     startTime = models.DateTimeField(default=timezone.now)
     started = models.BooleanField(default=False)
     ended = models.BooleanField(default=False)
+    bracket = models.JSONField(default=dict, null=True, blank=True)
 
 class Team(models.Model):
 

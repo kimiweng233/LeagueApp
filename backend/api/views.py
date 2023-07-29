@@ -12,6 +12,7 @@ from .riotAPIQueries import getSummonerInfo, getSummonerAccountInfo, getTopMaste
 import random
 import string
 import time
+import math
 
 @api_view(['GET'])
 def getTournamentsList(request):
@@ -28,7 +29,6 @@ def createTournament(request):
         serializer.save()
         return Response(serializer.data)
     else:
-        print(serializer.errors)
         return Response(serializer.errors)
     
 @api_view(['POST'])
@@ -72,10 +72,10 @@ def getTeamData(request):
 
 @api_view(['POST'])
 def getTournamentData(request):
-    tournament = Tournament.objects.filter(id=request.data["id"]).first()
+    tournament = Tournament.objects.filter(id=request.data["tournamentID"]).first()
     tournamentData = model_to_dict(tournament)
     tournamentData["teams"] = list(tournament.teams.values())
-    return Response({"tournament": tournamentData})
+    return Response(tournamentData)
 
 @api_view(['POST'])
 def summonerLogin(request):
@@ -353,5 +353,97 @@ def generateInviteCode(length):
     characters = string.ascii_uppercase + string.digits
     random_string = ''.join(random.choice(characters) for _ in range(length))
     return random_string
+
+@api_view(["POST"])
+def createBracket(request):
+    tournament = Tournament.objects.get(pk=request.data["tournamentID"])
+    teams = [{"id": team.id, "Name": team.teamName, "Score": 0, 'Status': 'Playing'} for team in list(tournament.teams.all())]
+    # teams = [
+    #     {'id': 1, 'Name': 'Team 1', 'Score': 0, 'Status': 'Playing'}, 
+    #     {'id': 2, 'Name': 'Team 2', 'Score': 0, 'Status': 'Playing'}, 
+    #     {'id': 3, 'Name': 'Team 3', 'Score': 0, 'Status': 'Playing'},
+    # ]
+
+    # teams = [
+    #     {'id': 1, 'Name': 'Team 1', 'Score': 0, 'Status': 'Playing'}, 
+    #     {'id': 2, 'Name': 'Team 2', 'Score': 0, 'Status': 'Playing'}, 
+    #     {'id': 3, 'Name': 'Team 3', 'Score': 0, 'Status': 'Playing'},
+    #     {'id': 4, 'Name': 'Team 4', 'Score': 0, 'Status': 'Playing'}, 
+    #     {'id': 5, 'Name': 'Team 5', 'Score': 0, 'Status': 'Playing'},
+    #     {'id': 6, 'Name': 'Team 6', 'Score': 0, 'Status': 'Playing'},
+    #     {'id': 7, 'Name': 'Team 7', 'Score': 0, 'Status': 'Playing'},
+    #     {'id': 8, 'Name': 'Team 8', 'Score': 0, 'Status': 'Playing'},
+    #     {'id': 9, 'Name': 'Team 9', 'Score': 0, 'Status': 'Playing'},
+    #     {'id': 10, 'Name': 'Team 10', 'Score': 0, 'Status': 'Playing'},
+    #     {'id': 11, 'Name': 'Team 11', 'Score': 0, 'Status': 'Playing'},
+    #     {'id': 12, 'Name': 'Team 12', 'Score': 0, 'Status': 'Playing'},
+    #     {'id': 13, 'Name': 'Team 13', 'Score': 0, 'Status': 'Playing'},
+    #     {'id': 14, 'Name': 'Team 14', 'Score': 0, 'Status': 'Playing'},
+    #     {'id': 15, 'Name': 'Team 15', 'Score': 0, 'Status': 'Playing'},
+    #     {'id': 16, 'Name': 'Team 16', 'Score': 0, 'Status': 'Playing'},
+    #     {'id': 17, 'Name': 'Team 17', 'Score': 0, 'Status': 'Playing'},
+    # ]
+    random.shuffle(teams)
+    gameNumber = 1
+    bracket = []
+
+    nearestPow2 = 2 ** int(math.log2(len(teams)))
+    extraTeams = len(teams) - nearestPow2
+    if extraTeams != 0:
+        layerOne = []
+        for i in range(0, extraTeams):
+            layerOne.append({
+                "Game Number": gameNumber,
+                "Next Game": math.ceil(gameNumber / 2) + extraTeams,
+                "Team 1": teams[2*i],
+                "Team 2": teams[2*i+1],
+                "Status": "Playing"
+            })
+            gameNumber += 1
+        bracket.append(layerOne)
+
+    layerCount = int(nearestPow2 / 2)
+    layerTwo = []
+    for i in range(0, math.ceil(extraTeams / 2)):
+        layerTwo.append({
+            "Game Number": gameNumber,
+            "Next Game": gameNumber + layerCount,
+            "Team 1": None,
+            "Team 2": None,
+            "Status": "Idle"
+        })
+        gameNumber += 1
+    if extraTeams % 2 == 1:
+        layerTwo[-1]["Team 2"] = teams[2*extraTeams]
+    start = (2 * extraTeams) + (0 if extraTeams % 2 == 0 else 1)
+    for i in range(0, math.floor((len(teams) - (2 * extraTeams)) / 2)):
+        layerTwo.append({
+            "Game Number": gameNumber,
+            "Next Game": gameNumber + layerCount,
+            "Team 1": teams[start + 2*i],
+            "Team 2": teams[start + (2*i+1)],
+            "Status": "Playing"
+        })
+        gameNumber += 1
+    bracket.append(layerTwo)
+
+    while len(bracket[-1]) > 1:
+        layerCount = int(layerCount / 2)
+        currLayer = []
+        for i in range(0, layerCount):
+            currLayer.append({
+                "Game Number": gameNumber,
+                "Next Game": gameNumber + layerCount,
+                "Team 1": None,
+                "Team 2": None,
+            })
+            gameNumber += 1
+        bracket.append(currLayer)
+    
+    tournament.bracket = bracket
+    tournament.save()
+
+    return Response(200)
+
 
 
