@@ -2,11 +2,14 @@
     height: 20vh;
     width: 100%;
     background-color: #212529;
-    margin-top: 40px;
     color: white;
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+.footerMargin {
+    margin-top: 40px;
 }
 
 .discordSymbol {

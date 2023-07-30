@@ -3,6 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "react-router-dom";
 
 import TournamentBracket from "../components/Tournaments Display/tournamentBracket";
+import TournamentDescription from "../components/Tournaments Display/tournamentDescription";
 import LoginGuard from "../components/Utilities/loginGuard";
 import LoadingAnimation from "../components/Utilities/loadingAnimation";
 
@@ -24,13 +25,12 @@ function TournamentMenu() {
         queryFn: async () =>
             services.getTournamentData({
                 tournamentID: searchParams.get("tournamentID"),
+                summonerID: localStorage.getItem("summonerID"),
             }),
         retry: false,
     });
     const tournamentDataLoading =
         isTournamentDataLoading && tournamentDataFetchStatus !== "idle";
-
-    // console.log(tournamentData);
 
     return (
         <div>
@@ -45,26 +45,24 @@ function TournamentMenu() {
                         </h1>
                         <div className="tournamentFormSectionTitleDividerBarsBlueRight" />
                     </div>
-                    <button
-                        onClick={() =>
-                            services.createBracket({
-                                tournamentID: tournamentData.id,
-                            })
-                        }
-                    >
-                        meow lu
-                    </button>
-                    <div
-                        className={`tournamentBracketViewPort ${
-                            bracketWidth <= window.innerWidth * 0.7 &&
-                            bracketHeight <= window.innerHeight * 0.8 &&
-                            "flexBoxColumn"
-                        }`}
-                    >
-                        <TournamentBracket
-                            bracket={tournamentData.bracket}
-                            setBracketWidth={setBracketWidth}
-                            setBracketHeight={setBracketHeight}
+                    <div className="tournamentMenu">
+                        <div
+                            className={`tournamentBracketViewPort ${
+                                bracketWidth <= window.innerWidth * 0.7 &&
+                                bracketHeight <= window.innerHeight * 0.8 &&
+                                "flexBoxColumn"
+                            }`}
+                        >
+                            <TournamentBracket
+                                bracket={tournamentData.bracket}
+                                summonerTeam={tournamentData.summonerTeam}
+                                setBracketWidth={setBracketWidth}
+                                setBracketHeight={setBracketHeight}
+                            />
+                        </div>
+                        <TournamentDescription
+                            tournamentData={tournamentData}
+                            summonerTeam={tournamentData.summonerTeam}
                         />
                     </div>
                 </div>

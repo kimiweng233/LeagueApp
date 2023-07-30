@@ -41,9 +41,13 @@
     box-shadow: inset 0px 0px 10px black;
 }
 
+.summonerTeamGameHighlight {
+    box-shadow: 0 0 10px #fff, 0 0 12px #65d2f0, 0 0 13px #2483ab,
+        0 0 14px #176682;
+}
+
 .ongoingGameHighlight {
-    box-shadow: 0 0 5px #fff, 0 0 7px #d0f065, 0 0 9px #99ab24, 0 0 15px #648217,
-        2px 3px 15px #021925;
+    box-shadow: 0 0 5px #fff, 0 0 7px #d0f065, 0 0 9px #99ab24, 0 0 15px #648217;
 }
 
 .idleGameHighlight {
@@ -164,4 +168,205 @@ svg line {
     filter: drop-shadow(0px 0px 1px #ffffff6a)
         drop-shadow(0px 0px 2px #65bdf07a) drop-shadow(0px 0px 3px #2458ab7a)
         drop-shadow(0px 0px 4px #17408272) drop-shadow(0px 0px 5px #0c2d6174);
+}
+
+.bracketMatchSignWrapper {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.bracketMatchSign {
+    font-style: italic;
+    font-size: 13px;
+    margin: 0;
+    padding: 0;
+    text-shadow: 0 0 1px #fff, 0 0 2px #d2d2d2, 0 0 3px rgb(139, 139, 139);
+}
+
+.bracketCrossedSwords {
+    position: relative;
+    bottom: 2px;
+}
+
+.tournamentMenu {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 80vw;
+    background-color: #284e60;
+    padding: 60px;
+    margin-top: 50px;
+    border-style: solid;
+    border-color: #def4ff;
+    border-radius: 25px;
+    border-width: 5px;
+    box-shadow: 0 0 20px #fff, 0 0 30px #65bdf0, 0 0 40px #2458ab,
+        0 0 50px #174082, 0 0 60px #0c2c61, inset 0 0 5px #fff,
+        inset 0 0 20px #65bdf0, inset 0 0 9px #2458ab, inset 0 0 11px #174082,
+        inset 0 0 13px #0c2c61;
+    color: white;
+    margin-bottom: 50px;
+}
+
+.titleLeftMargin {
+    margin-left: 20px;
+}
+
+.titleRightMargin {
+    margin-right: 20px;
+}
+
+.bracketDescription {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 70vw;
+    gap: 10px;
+}
+
+.bracketDescriptionRow {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.bracketDescriptionTitle {
+    margin: 0;
+    padding: 0;
+    text-shadow: 0 0 1px #fff, 0 0 2px #d2d2d2, 0 0 3px rgb(139, 139, 139);
+    white-space: nowrap;
+}
+
+.bracketDescriptionInfoTextWrapper {
+    margin-left: 10px;
+    flex-grow: 1;
+    text-align: right;
+    background-image: url("../Textures/black-felt.png");
+    background-color: #203c4b;
+    border-color: #285367;
+    border-style: inset;
+    border-width: 3px;
+    border-radius: 10px;
+    padding: 10px;
+    box-shadow: inset 0px 0px 20px #060a0b;
+    padding: 5px;
+    padding-right: 10px;
+}
+
+.bracketDescriptionInfoText {
+    margin: 0;
+    padding: 0;
+}
+
+.bracketDescriptionInfo {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 45%;
+}
+
+.bracketWatchLiveButton {
+    width: 35px;
+    height: 35px;
+    position: relative;
+    top: 2px;
+    margin-left: 10px;
+    border: 3px solid white;
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.bracketWatchLiveButtonBlueHalo {
+    background-color: #3a96ca;
+    box-shadow: 0 0 5px #fff, 0 0 7px #65bdf0, 0 0 9px #2458ab, 0 0 11px #174082,
+        0 0 13px #0c2c61, inset 0 0 3px #fff, inset 0 0 5px #65bdf0,
+        inset 0 0 7px #2458ab, inset 0 0 9px #174082;
+}
+
+.bracketWatchLiveButtonGreyHalo {
+    background-color: #d8d8d8;
+    box-shadow: 0 0 5px #9f9f9f, 0 0 7px #757575, 0 0 9px #8f8f8f,
+        0 0 11px #767676, inset 0 0 3px #6b6b6b, inset 0 0 5px #ababab,
+        inset 0 0 7px #727272;
+}
+
+.bracketWatchLiveButtonArrow {
+    width: 25px;
+    height: 25px;
+}
+
+.bracketCurrentGameText {
+    margin-left: 10px;
+    background-color: #203c4b;
+    border-color: #296a88;
+    border-style: inset;
+    border-width: 3px;
+    border-radius: 10px;
+    padding-top: 1px;
+    padding-bottom: 1px;
+    padding-left: 5px;
+    padding-right: 5px;
+    box-shadow: inset 0px 0px 20px #000000;
+    text-shadow: 0 0 1px #fff, 0 0 2px #d2d2d2, 0 0 3px rgb(139, 139, 139);
+    white-space: nowrap;
+    position: relative;
+    top: 2px;
+}
+
+.bracketCopyTextButton {
+    width: 25px;
+    height: 25px;
+    position: relative;
+    top: 4px;
+    margin-left: 5px;
+}
+
+.bracketDescriptionWrapper {
+    width: 70vw;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    background-color: #143442;
+    padding: 20px;
+    margin-top: 50px;
+    border-style: inset;
+    border-width: 4px;
+    border-color: #4169877f;
+    box-shadow: inset 0px 0px 30px black;
+    background-image: url("../Textures/black-felt.png");
+}
+
+.bracketTournamentDescriptionTitle {
+    margin-right: auto;
+}
+
+.bracketTournamentDescriptiontWrapper {
+    width: 100%;
+    flex-grow: 1;
+    text-align: left;
+    min-height: 200px;
+    padding: 10px;
+    background-image: url("../Textures/black-felt.png");
+    background-color: #203c4b;
+    border-color: #285367;
+    border-style: inset;
+    border-width: 3px;
+    border-radius: 10px;
+    box-shadow: inset 0px 0px 20px #060a0b;
+    font-style: italic;
+}
+
+.greyTextHalo {
+    text-shadow: 0 0 5px #e9e9e9, 0 0 7px #a2a2a2, 0 0 9px #787878,
+        0 0 11px #5b5b5b, 0 0 13px #3b3b3b, 0 0 15px #262626;
+}
+
+.cursorPointer {
+    cursor: pointer;
 }

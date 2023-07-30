@@ -40,8 +40,6 @@ function MemberCard(props) {
         teamData,
     } = props;
 
-    console.log(props);
-
     const {
         data: profileIconSrc,
         isLoading: isProfileIconSrcLoading,

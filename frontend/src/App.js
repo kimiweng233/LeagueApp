@@ -10,6 +10,7 @@ import TournamentsList from "./pages/tournamentsList";
 import TeamForm from "./pages/teamCreation";
 import TeamsList from "./pages/teamsList";
 import TeamMenu from "./pages/teamMenu";
+import TeamMenuPublic from "./pages/teamMenuPublic";
 import TournamentMenu from "./pages/tournamentMenu";
 import LeagueLogin from "./pages/leagueLogin";
 import JoinedTeams from "./pages/joinedTeamsList";
@@ -52,6 +53,11 @@ function App() {
                             <Route exact path="/team" element={<TeamMenu />} />
                             <Route
                                 exact
+                                path="/teamInfo"
+                                element={<TeamMenuPublic />}
+                            />
+                            <Route
+                                exact
                                 path="/tournamentPage"
                                 element={<TournamentMenu />}
                             />
@@ -70,7 +76,7 @@ function App() {
                         </Routes>
                         <ReactQueryDevtools initialIsOpen={false} />
                     </div>
-                    <Footer className="appFooter" />
+                    <Footer />
                 </div>
             </BrowserRouter>
         </QueryClientProvider>

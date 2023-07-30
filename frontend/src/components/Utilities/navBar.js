@@ -1,5 +1,6 @@
 import React from "react";
 import { useMutation } from "@tanstack/react-query";
+import { useLocation } from "react-router-dom";
 
 import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
@@ -15,6 +16,8 @@ import services from "../../services";
 import "../../assets/css/navbar.css";
 
 const AppNavbar = () => {
+    const location = useLocation();
+
     const updateSummonerInfo = (event) => {
         event.preventDefault();
         mutate();
@@ -36,7 +39,7 @@ const AppNavbar = () => {
         <div>
             {isLoading && <LoadingScreen />}
             <Navbar
-                className="navbarWrapper"
+                className={`${location.pathname != "/" && "navbarWrapper"}`}
                 bg="dark"
                 variant="dark"
                 expand="lg"

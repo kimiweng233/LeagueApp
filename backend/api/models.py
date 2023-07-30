@@ -11,10 +11,11 @@ class Tournament(models.Model):
 
     tournamentName = models.CharField(max_length=100, default="Unnamed Tournament", unique=True)
     tournamentFormat = models.TextField(max_length=10, choices=TOURNAMENT_FORMATS, default="5v5")
-    description = models.CharField(max_length=100, default="No Description")
+    description = models.CharField(max_length=100, blank=True, default="No Description")
     teamsCap = models.IntegerField(default = 0)
     prizePool = models.FloatField(default=0.0)
     registrationFee = models.FloatField(default=0.0)
+    liveLink = models.CharField(max_length=500,null=True, blank=True)
     quickJoinQueue = models.ManyToManyField("Summoner", blank=True)
     startTime = models.DateTimeField(default=timezone.now)
     started = models.BooleanField(default=False)

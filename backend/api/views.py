@@ -27,8 +27,10 @@ def createTournament(request):
     serializer = TournamentSerializer(data=request.data)
     if serializer.is_valid():
         serializer.save()
+        print("hello")
         return Response(serializer.data)
     else:
+        print(serializer.errors)
         return Response(serializer.errors)
     
 @api_view(['POST'])
@@ -71,10 +73,25 @@ def getTeamData(request):
     return Response(teamData)
 
 @api_view(['POST'])
+def getTeamPublicData(request):
+    team = Team.objects.filter(id=request.data["id"]).first()    
+    teamData = model_to_dict(team)
+    members = SummonerSerializer(team.members.all(), many=True).data
+    teamData["members"] = members
+    return Response(teamData)
+
+@api_view(['POST'])
 def getTournamentData(request):
+    summoner = Summoner.objects.filter(summonerID=request.data["summonerID"]).first()
     tournament = Tournament.objects.filter(id=request.data["tournamentID"]).first()
     tournamentData = model_to_dict(tournament)
     tournamentData["teams"] = list(tournament.teams.values())
+    if summoner.registeredTournaments.all().filter(pk=tournament.id).exists():
+        for team in summoner.registeredTeams.all():
+            if team.tournament.id == tournament.id:
+                tournamentData["summonerTeam"] = team.teamName
+    else:
+        tournamentData["summonerTeam"] = None
     return Response(tournamentData)
 
 @api_view(['POST'])
@@ -145,6 +162,8 @@ def joinTeam(request):
         team = Team.objects.get(pk=request.data["teamID"])
         if team.members.all().count() > 5:
             Response("Team capacity reached!", status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        if team.tournament.started or team.tournament.ended:
+            Response("Team joining phase has ended!", status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         joinTeamFunc(request.data["summonerID"], request.data["teamID"])
         return Response(200)
     except Exception as e:
@@ -382,6 +401,8 @@ def createBracket(request):
     #     {'id': 15, 'Name': 'Team 15', 'Score': 0, 'Status': 'Playing'},
     #     {'id': 16, 'Name': 'Team 16', 'Score': 0, 'Status': 'Playing'},
     #     {'id': 17, 'Name': 'Team 17', 'Score': 0, 'Status': 'Playing'},
+    #     {'id': 18, 'Name': 'Team 18', 'Score': 0, 'Status': 'Playing'},
+    #     {'id': 19, 'Name': 'Team 18', 'Score': 0, 'Status': 'Playing'},
     # ]
     random.shuffle(teams)
     gameNumber = 1
@@ -394,6 +415,7 @@ def createBracket(request):
         for i in range(0, extraTeams):
             layerOne.append({
                 "Game Number": gameNumber,
+                "Room Code": "AAAAAA",
                 "Next Game": math.ceil(gameNumber / 2) + extraTeams,
                 "Team 1": teams[2*i],
                 "Team 2": teams[2*i+1],
@@ -407,7 +429,8 @@ def createBracket(request):
     for i in range(0, math.ceil(extraTeams / 2)):
         layerTwo.append({
             "Game Number": gameNumber,
-            "Next Game": gameNumber + layerCount,
+            "Room Code": "AAAAAA",
+            "Next Game": gameNumber + (layerCount - i - 1) + i // 2 + 1 if  layerCount > 1 else None,
             "Team 1": None,
             "Team 2": None,
             "Status": "Idle"
@@ -416,28 +439,36 @@ def createBracket(request):
     if extraTeams % 2 == 1:
         layerTwo[-1]["Team 2"] = teams[2*extraTeams]
     start = (2 * extraTeams) + (0 if extraTeams % 2 == 0 else 1)
-    for i in range(0, math.floor((len(teams) - (2 * extraTeams)) / 2)):
+    teamPos = 0
+    for i in (range(len(layerTwo), layerCount)):
         layerTwo.append({
             "Game Number": gameNumber,
-            "Next Game": gameNumber + layerCount,
-            "Team 1": teams[start + 2*i],
-            "Team 2": teams[start + (2*i+1)],
+            "Room Code": "AAAAAA",
+            "Next Game": gameNumber + (layerCount - i - 1) + i // 2 + 1 if  layerCount > 1 else None,
+            "Team 1": teams[start + 2*teamPos],
+            "Team 2": teams[start + (2*teamPos+1)],
             "Status": "Playing"
         })
         gameNumber += 1
+        teamPos += 1
     bracket.append(layerTwo)
 
     while len(bracket[-1]) > 1:
         layerCount = int(layerCount / 2)
         currLayer = []
+        nextGame = gameNumber + layerCount
         for i in range(0, layerCount):
             currLayer.append({
                 "Game Number": gameNumber,
-                "Next Game": gameNumber + layerCount,
+                "Room Code": "AAAAAA",
+                "Next Game": nextGame if  layerCount > 1 else None,
                 "Team 1": None,
                 "Team 2": None,
+                "Status": "Idle"
             })
             gameNumber += 1
+            if i % 2 == 1:
+                nextGame += 1
         bracket.append(currLayer)
     
     tournament.bracket = bracket

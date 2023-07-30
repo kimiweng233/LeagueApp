@@ -1,11 +1,13 @@
 import React, { useEffect } from "react";
 
 import TournamentBracketCard from "./tournamentBracketCard";
+import TournamentBracketMatchSign from "./tournamentBracketMatchSign";
 
 import "../../assets/css/tournamentBracket.css";
 
 const TournamentBracket = (props) => {
     const bracket = props.bracket;
+    const summonerTeam = props.summonerTeam;
 
     const slotWidth = 330;
     const slotHeight = 140;
@@ -33,6 +35,37 @@ const TournamentBracket = (props) => {
                                 x={`${
                                     roundNum * slotWidth +
                                     slotWidth / 2 -
+                                    contentWidth / 2 +
+                                    contentWidth * 0.05 +
+                                    5
+                                }`}
+                                y={`${
+                                    (Math.pow(2, roundNum) - 1) *
+                                        (slotHeight / 2) +
+                                    gameNum *
+                                        (height /
+                                            Math.pow(
+                                                2,
+                                                bracket.length - 1 - roundNum
+                                            )) +
+                                    slotHeight / 2 -
+                                    contentHeight / 2 -
+                                    5
+                                }`}
+                                width={`${contentWidth}`}
+                                height={`${contentHeight}`}
+                            >
+                                <TournamentBracketMatchSign
+                                    game={game}
+                                    quarter={roundNum == bracket.length - 3}
+                                    semi={roundNum == bracket.length - 2}
+                                    final={roundNum == bracket.length - 1}
+                                />
+                            </foreignObject>
+                            <foreignObject
+                                x={`${
+                                    roundNum * slotWidth +
+                                    slotWidth / 2 -
                                     contentWidth / 2
                                 }`}
                                 y={`${
@@ -50,7 +83,10 @@ const TournamentBracket = (props) => {
                                 width={`${contentWidth}`}
                                 height={`${contentHeight}`}
                             >
-                                <TournamentBracketCard game={game} />
+                                <TournamentBracketCard
+                                    game={game}
+                                    summonerTeam={summonerTeam}
+                                />
                             </foreignObject>
                             {roundNum != bracket.length - 1 && (
                                 <g>

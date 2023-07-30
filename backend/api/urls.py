@@ -6,6 +6,7 @@ urlpatterns = [
     path('createTournament/', views.createTournament),
     path('createTeam/', views.createTeam),
     path('getTeamData/', views.getTeamData),
+    path('getTeamPublicData/', views.getTeamData),
     path('getTournamentData/', views.getTournamentData),
     path('summonerLogin/', views.summonerLogin),
     path('joinTeam/', views.joinTeam),

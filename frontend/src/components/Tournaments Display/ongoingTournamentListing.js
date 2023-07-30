@@ -27,7 +27,11 @@ function OngoingTournament(props) {
 
     const ViewLivestream = (props) => {
         return (
-            <button className="tournamentButton" onClick={props.onClick}>
+            <button
+                disabled={props.liveLink === null}
+                className="tournamentButton"
+                onClick={props.onClick}
+            >
                 <div className="tournamentButtonContentWrapper">
                     <h2>Watch Live</h2>
                     <BiSlideshow className="tournamentButtonTVIcon" />
@@ -38,10 +42,9 @@ function OngoingTournament(props) {
 
     const viewLivestreamFunc = (props) => {
         return {
+            liveLink: props.liveLink,
             onClick: () => {
-                if (props.livestreamLink !== null) {
-                    window.location = props.livestreamLink;
-                }
+                window.open(props.liveLink, "_blank");
             },
         };
     };

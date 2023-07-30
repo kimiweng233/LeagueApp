@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 import "../../assets/css/tournamentBracket.css";
 
 function TournamentBracketTeam(props) {
     const team = props.team;
+    const summonerTeam = props.summonerTeam;
 
     const navigate = useNavigate();
 
@@ -21,7 +21,11 @@ function TournamentBracketTeam(props) {
                 }`}
                 onClick={() => {
                     if (team) {
-                        navigate(`/team?teamID=${team["id"]}`);
+                        if (team["Name"] == summonerTeam) {
+                            navigate(`/team?teamID=${team["id"]}`);
+                        } else {
+                            navigate(`/teamInfo?teamID=${team["id"]}`);
+                        }
                     }
                 }}
             >

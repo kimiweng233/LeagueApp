@@ -15,7 +15,7 @@ import LoadingAnimation from "../components/Utilities/loadingAnimation";
 
 import "../assets/css/teamMenu.css";
 
-function Test(props) {
+function TeamMenu(props) {
     const [searchParams] = useSearchParams();
     const queryClient = useQueryClient();
 
@@ -382,4 +382,4 @@ function Test(props) {
     );
 }
 
-export default LoginGuard(Test);
+export default LoginGuard(TeamMenu);

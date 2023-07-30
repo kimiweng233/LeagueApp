@@ -20,6 +20,12 @@ const getTeamData = (data) => {
     });
 };
 
+const getTeamPublicData = (data) => {
+    return http.post(`/getTeamPublicData/`, data).then((response) => {
+        return response.data;
+    });
+};
+
 const getTournamentData = (data) => {
     return http.post(`/getTournamentData/`, data).then((response) => {
         return response.data;
@@ -105,6 +111,7 @@ const functions = {
     createTournament,
     createTeam,
     getTeamData,
+    getTeamPublicData,
     getTournamentData,
     summonerLogin,
     joinTeam,

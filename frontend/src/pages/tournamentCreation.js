@@ -16,6 +16,7 @@ function TournamentForm() {
     const [teamsCap, setTeamsCap] = useState("");
     const [prizePool, setPrizePool] = useState("");
     const [registrationFee, setRegistrationFee] = useState("");
+    const [liveBroadcastLink, setLiveBroadcastLink] = useState("");
     const [startTime, setStartTime] = useState("");
     const navigate = useNavigate();
 
@@ -29,6 +30,7 @@ function TournamentForm() {
                 teamsCap: teamsCap,
                 prizePool: prizePool,
                 registrationFee: registrationFee,
+                liveLink: liveBroadcastLink,
                 startTime: startTime,
                 teams: [],
             })
@@ -117,6 +119,19 @@ function TournamentForm() {
                                 value={registrationFee}
                                 onChange={(e) => {
                                     setRegistrationFee(e.target.value);
+                                }}
+                                className="formInputField"
+                            />
+                        </div>
+                        <div className="labelInputWrapper">
+                            <h2 className="formInputFieldLabel">
+                                Broadcast Link:
+                            </h2>
+                            <input
+                                type="text"
+                                value={liveBroadcastLink}
+                                onChange={(e) => {
+                                    setLiveBroadcastLink(e.target.value);
                                 }}
                                 className="formInputField"
                             />

@@ -40,7 +40,7 @@ class TournamentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Tournament
-        fields = ('id', 'tournamentName', 'tournamentFormat', 'description', 'teamsCap', 'prizePool', 'registrationFee', 'startTime', 'started', 'ended', 'teams', 'bracket')
+        fields = ('id', 'tournamentName', 'tournamentFormat', 'description', 'teamsCap', 'prizePool', 'registrationFee', 'startTime', 'started', 'ended', 'teams', 'bracket', 'liveLink')
 
     def create(self, validated_data):
         validated_data.pop('teams')

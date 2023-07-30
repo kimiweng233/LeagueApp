@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 
 import TournamentBracketTeam from "./tournamentBracketTeam";
 
@@ -6,17 +6,28 @@ import "../../assets/css/tournamentBracket.css";
 
 function TournamentBracketCard(props) {
     const game = props.game;
+    const summonerTeam = props.summonerTeam;
 
     return (
         <div className="tournamentBracketCardOuterWrapper">
             <div
-                className={`tournamentBracketCardOuterBorder ${
-                    game["Status"] == "Playing" && "ongoingGameHighlight"
-                } ${game["Ended"] == "Playing" && "idleGameHighlight"}`}
+                className={`tournamentBracketCardOuterBorder  ${
+                    game["Status"] == "Playing" &&
+                    (game["Team 1"]["Name"] == summonerTeam ||
+                    game["Team 2"]["Name"] == summonerTeam
+                        ? "summonerTeamGameHighlight"
+                        : "ongoingGameHighlight")
+                } ${game["Status"] == "Ended" && "idleGameHighlight"}`}
             >
                 <div className={`tournamentBracketCardWrapper`}>
-                    <TournamentBracketTeam team={game["Team 1"]} />
-                    <TournamentBracketTeam team={game["Team 2"]} />
+                    <TournamentBracketTeam
+                        team={game["Team 1"]}
+                        summonerTeam={summonerTeam}
+                    />
+                    <TournamentBracketTeam
+                        team={game["Team 2"]}
+                        summonerTeam={summonerTeam}
+                    />
                 </div>
             </div>
         </div>
