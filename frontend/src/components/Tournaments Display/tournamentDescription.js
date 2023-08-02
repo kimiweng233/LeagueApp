@@ -9,6 +9,9 @@ function TournamentDescription(props) {
         if (!summonerTeam) {
             return "Not Joined";
         }
+        if (!tournamentData.started) {
+            return "Waiting to Start";
+        }
         for (let i = tournamentData.bracket.length - 1; i >= 0; i--) {
             for (let j = 0; j < tournamentData.bracket[i].length; j++) {
                 const currentGame = tournamentData.bracket[i][j];
@@ -41,9 +44,17 @@ function TournamentDescription(props) {
                     <div className="bracketDescriptionInfo">
                         <h2 className="bracketDescriptionTitle">Status: </h2>
                         {currentStatus == "Not Joined" ? (
-                            <h2>Not Joined</h2>
+                            <h2 className="bracketDescriptionTitle">
+                                &nbsp; Not Joined
+                            </h2>
                         ) : currentStatus == "Eliminated" ? (
-                            <h2>Eliminated</h2>
+                            <h2 classname="bracketDescriptionTitle">
+                                &nbsp; Eliminated
+                            </h2>
+                        ) : currentStatus == "Waiting to Start" ? (
+                            <h2 className="bracketDescriptionTitle">
+                                &nbsp; Waiting to Start
+                            </h2>
                         ) : (
                             <div className="coupledElements inviteCodeSection">
                                 <h2 className="bracketDescriptionTitle">

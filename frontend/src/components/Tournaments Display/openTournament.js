@@ -1,6 +1,9 @@
 import { useNavigate } from "react-router-dom";
 
+import { Tooltip } from "react-tooltip";
+
 import { MdOutlineAddBox } from "react-icons/md";
+import { ImCancelCircle } from "react-icons/im";
 import { FaListUl } from "react-icons/fa";
 
 import TournamentCard from "./tournamentCard";
@@ -10,33 +13,52 @@ function OpenTournament(props) {
 
     const RegisterTeamButton = (props) => {
         return (
-            <button
-                className="tournamentButton"
-                disabled={
-                    props.alreadyJoined || props.teamsNum >= props.teamsCap
-                }
-                onClick={props.onClick}
-            >
-                <div className="tournamentButtonContentWrapper">
-                    <h2>
-                        {props.alreadyJoined
-                            ? "Already Joined"
+            <div>
+                <button
+                    className={`tournamentCardButton joinedTeamsSubmitButton ${
+                        !(
+                            props.alreadyJoined ||
+                            props.teamsNum >= props.teamsCap
+                        )
+                            ? "tournamentButtonHighlight"
+                            : "tournamentButtonDisabledHighlight"
+                    } quickJoinButton`}
+                    onClick={(event) => {
+                        props.onClick(event);
+                    }}
+                    data-tooltip-id="watchLiveTooltip"
+                    data-tooltip-content={
+                        props.alreadyJoined
+                            ? "Already Joined the Tournament!"
                             : props.teamsNum >= props.teamsCap
-                            ? "Full Capacity"
-                            : "Register Team"}
-                    </h2>
-                    {!props.alreadyJoined &&
-                        props.teamsNum < props.teamsCap && (
-                            <MdOutlineAddBox className="tournamentButtonRegisterIcon" />
+                            ? "Team Capacity has been Reached!"
+                            : "Create a Team!"
+                    }
+                >
+                    <div className="tournamentButtonContentWrapper">
+                        {!props.alreadyJoined &&
+                        props.teamsNum < props.teamsCap ? (
+                            <MdOutlineAddBox className="tournamentButtonIcon" />
+                        ) : (
+                            <ImCancelCircle className="tournamentButtonIconSmall" />
                         )}
-                </div>
-            </button>
+                    </div>
+                </button>
+                <Tooltip id="createteamTooltip" className="tooltipAddOn" />
+            </div>
         );
     };
 
     const registerFunc = (props) => {
         return {
-            onClick: () => navigate(`/createTeam?tournamentID=${props.id}`),
+            onClick: (event) => {
+                event.stopPropagation();
+                if (
+                    !(props.alreadyJoined || props.teamsNum >= props.teamsCap)
+                ) {
+                    navigate(`/createTeam?tournamentID=${props.id}`);
+                }
+            },
             alreadyJoined: props.alreadyJoined,
             teamsNum: props.teams.length,
             teamsCap: props.teamsCap,
@@ -45,22 +67,32 @@ function OpenTournament(props) {
 
     const ViewTeamsButton = (props) => {
         return (
-            <button className="tournamentButton" onClick={props.onClick}>
-                <div className="tournamentButtonContentWrapper">
-                    <h2>
-                        {props.alreadyJoined ? "Already Joined" : "View Teams"}
-                    </h2>
-                    {!props.alreadyJoined && (
-                        <FaListUl className="tournamentButtonViewTeamsIcon" />
-                    )}
-                </div>
-            </button>
+            <div>
+                <button
+                    className="tournamentCardButton joinedTeamsSubmitButton tournamentButtonHighlight quickJoinButton"
+                    onClick={(event) => {
+                        props.onClick(event);
+                    }}
+                    data-tooltip-id="viewTeamsTooltip"
+                    data-tooltip-content="View Teams!"
+                >
+                    <div className="tournamentButtonContentWrapper">
+                        {!props.alreadyJoined && (
+                            <FaListUl className="tournamentButtonIconSmall" />
+                        )}
+                    </div>
+                </button>
+                <Tooltip id="viewTeamsTooltip" className="tooltipAddOn" />
+            </div>
         );
     };
 
     const viewTeamsFunc = (props) => {
         return {
-            onClick: () => navigate(`/teams?tournamentID=${props.id}`),
+            onClick: (event) => {
+                event.stopPropagation();
+                navigate(`/teams?tournamentID=${props.id}`);
+            },
         };
     };
 

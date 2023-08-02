@@ -99,7 +99,9 @@ const getTeamsWithVacancy = (data) => {
 };
 
 const quickJoin = (data) => {
-    return http.post(`/quickJoin/`, data);
+    return http.post(`/quickJoin/`, data).then((response) => {
+        return response.data;
+    });
 };
 
 const createBracket = (data) => {

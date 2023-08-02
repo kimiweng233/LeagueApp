@@ -6,8 +6,6 @@ import OpenTournament from "../components/Tournaments Display/openTournament";
 import OngoingTournament from "../components/Tournaments Display/ongoingTournamentListing";
 import LoginGuard from "../components/Utilities/loginGuard";
 
-import { GiCrossedSwords, GiShieldEchoes } from "react-icons/gi";
-
 import "../assets/css/tournamentsList.css";
 
 import LoadingAnimation from "../components/Utilities/loadingAnimation";
@@ -43,13 +41,12 @@ function TournamentsList() {
 
     return (
         <div className="tournamentsListWrapper">
-            <h1 className="tournamentSectionTitle tournamentSectionTitleRed">
-                Ongoing Tournaments
-            </h1>
-            <div className="tournamentSectionTitleDivider">
-                <div className="tournamentSectionTitleDividerBarsRed" />
-                <GiCrossedSwords className="tournamentSectionWingSymbol" />
-                <div className="tournamentSectionTitleDividerBarsRed" />
+            <div className="tournamentFormTitleSectionWrapper">
+                <div className="tournamentFormSectionTitleDividerBarsBlueLeft" />
+                <h1 className="tournamentFormSectionTitleBlue">
+                    Ongoing Tournaments
+                </h1>
+                <div className="tournamentFormSectionTitleDividerBarsBlueRight" />
             </div>
             <div className="tournamentCardsWrapper">
                 {tournamentsLoading || joinedTournamentsLoading ? (
@@ -76,13 +73,12 @@ function TournamentsList() {
                     </div>
                 )}
             </div>
-            <h1 className="tournamentSectionTitle tournamentSectionTitleBlue">
-                Open Tournaments
-            </h1>
-            <div className="tournamentSectionTitleDivider">
-                <div className="tournamentSectionTitleDividerBarsBlue" />
-                <GiShieldEchoes className="tournamentSectionWingSymbol" />
-                <div className="tournamentSectionTitleDividerBarsBlue" />
+            <div className="tournamentFormTitleSectionWrapper">
+                <div className="tournamentFormSectionTitleDividerBarsBlueLeft" />
+                <h1 className="tournamentFormSectionTitleBlue">
+                    Open Tournaments
+                </h1>
+                <div className="tournamentFormSectionTitleDividerBarsBlueRight" />
             </div>
             <div className="tournamentCardsWrapper">
                 {tournamentsLoading || joinedTournamentsLoading ? (

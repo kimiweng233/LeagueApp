@@ -39,7 +39,7 @@ const AppNavbar = () => {
         <div>
             {isLoading && <LoadingScreen />}
             <Navbar
-                className={`${location.pathname != "/" && "navbarWrapper"}`}
+                className={`${location.pathname != "/" && "navbarMargin"}`}
                 bg="dark"
                 variant="dark"
                 expand="lg"

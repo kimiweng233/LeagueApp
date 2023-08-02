@@ -2,12 +2,14 @@ import React, { useEffect } from "react";
 
 import TournamentBracketCard from "./tournamentBracketCard";
 import TournamentBracketMatchSign from "./tournamentBracketMatchSign";
+import CountdownClock from "../Utilities/countDownClock";
 
 import "../../assets/css/tournamentBracket.css";
 
 const TournamentBracket = (props) => {
     const bracket = props.bracket;
     const summonerTeam = props.summonerTeam;
+    const startTime = props.startTime;
 
     const slotWidth = 330;
     const slotHeight = 140;
@@ -25,118 +27,97 @@ const TournamentBracket = (props) => {
         props.setBracketHeight(height);
     }, []);
 
-    return (
-        <svg width={width} height={height}>
-            {bracket.map((round, roundNum) =>
-                round.map((game, gameNum) => {
-                    return (
-                        <g key={roundNum.toString() + gameNum.toString()}>
-                            <foreignObject
-                                x={`${
-                                    roundNum * slotWidth +
-                                    slotWidth / 2 -
-                                    contentWidth / 2 +
-                                    contentWidth * 0.05 +
-                                    5
-                                }`}
-                                y={`${
-                                    (Math.pow(2, roundNum) - 1) *
-                                        (slotHeight / 2) +
-                                    gameNum *
-                                        (height /
-                                            Math.pow(
-                                                2,
-                                                bracket.length - 1 - roundNum
-                                            )) +
-                                    slotHeight / 2 -
-                                    contentHeight / 2 -
-                                    5
-                                }`}
-                                width={`${contentWidth}`}
-                                height={`${contentHeight}`}
-                            >
-                                <TournamentBracketMatchSign
-                                    game={game}
-                                    quarter={roundNum == bracket.length - 3}
-                                    semi={roundNum == bracket.length - 2}
-                                    final={roundNum == bracket.length - 1}
-                                />
-                            </foreignObject>
-                            <foreignObject
-                                x={`${
-                                    roundNum * slotWidth +
-                                    slotWidth / 2 -
-                                    contentWidth / 2
-                                }`}
-                                y={`${
-                                    (Math.pow(2, roundNum) - 1) *
-                                        (slotHeight / 2) +
-                                    gameNum *
-                                        (height /
-                                            Math.pow(
-                                                2,
-                                                bracket.length - 1 - roundNum
-                                            )) +
-                                    slotHeight / 2 -
-                                    contentHeight / 2
-                                }`}
-                                width={`${contentWidth}`}
-                                height={`${contentHeight}`}
-                            >
-                                <TournamentBracketCard
-                                    game={game}
-                                    summonerTeam={summonerTeam}
-                                />
-                            </foreignObject>
-                            {roundNum != bracket.length - 1 && (
-                                <g>
-                                    <line
-                                        x1={`${
-                                            roundNum * slotWidth +
-                                            slotWidth / 2 +
-                                            contentWidth / 2 -
-                                            (contentWidth *
-                                                (1 -
-                                                    contentInnerBoxWidthRatio)) /
-                                                2
-                                        }`}
-                                        y1={`${
-                                            (Math.pow(2, roundNum) - 1) *
-                                                (slotHeight / 2) +
-                                            gameNum *
-                                                (height /
-                                                    Math.pow(
-                                                        2,
-                                                        bracket.length -
-                                                            1 -
-                                                            roundNum
-                                                    )) +
-                                            slotHeight / 2
-                                        }`}
-                                        x2={`${
-                                            roundNum * slotWidth + slotWidth
-                                        }`}
-                                        y2={`${
-                                            (Math.pow(2, roundNum) - 1) *
-                                                (slotHeight / 2) +
-                                            gameNum *
-                                                (height /
-                                                    Math.pow(
-                                                        2,
-                                                        bracket.length -
-                                                            1 -
-                                                            roundNum
-                                                    )) +
-                                            slotHeight / 2
-                                        }`}
-                                        className="linkAccountButton"
-                                        stroke="#dbe9ff"
-                                        strokeWidth="2"
+    if (Object.entries(bracket).length == 0) {
+        return (
+            <div className="tournamentNotStartedSignWrapper">
+                <p className="homePageButtonText">Tournament Starting in:</p>
+                <CountdownClock targetDateTime={startTime} />
+                <div className="lds-facebook">
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                </div>
+            </div>
+        );
+    } else {
+        return (
+            <svg width={width} height={height}>
+                {bracket.map((round, roundNum) =>
+                    round.map((game, gameNum) => {
+                        return (
+                            <g key={roundNum.toString() + gameNum.toString()}>
+                                <foreignObject
+                                    x={`${
+                                        roundNum * slotWidth +
+                                        slotWidth / 2 -
+                                        contentWidth / 2 +
+                                        contentWidth * 0.05 +
+                                        5
+                                    }`}
+                                    y={`${
+                                        (Math.pow(2, roundNum) - 1) *
+                                            (slotHeight / 2) +
+                                        gameNum *
+                                            (height /
+                                                Math.pow(
+                                                    2,
+                                                    bracket.length -
+                                                        1 -
+                                                        roundNum
+                                                )) +
+                                        slotHeight / 2 -
+                                        contentHeight / 2 -
+                                        5
+                                    }`}
+                                    width={`${contentWidth}`}
+                                    height={`${contentHeight}`}
+                                >
+                                    <TournamentBracketMatchSign
+                                        game={game}
+                                        quarter={roundNum == bracket.length - 3}
+                                        semi={roundNum == bracket.length - 2}
+                                        final={roundNum == bracket.length - 1}
                                     />
-                                    {gameNum % 2 == 1 && (
+                                </foreignObject>
+                                <foreignObject
+                                    x={`${
+                                        roundNum * slotWidth +
+                                        slotWidth / 2 -
+                                        contentWidth / 2
+                                    }`}
+                                    y={`${
+                                        (Math.pow(2, roundNum) - 1) *
+                                            (slotHeight / 2) +
+                                        gameNum *
+                                            (height /
+                                                Math.pow(
+                                                    2,
+                                                    bracket.length -
+                                                        1 -
+                                                        roundNum
+                                                )) +
+                                        slotHeight / 2 -
+                                        contentHeight / 2
+                                    }`}
+                                    width={`${contentWidth}`}
+                                    height={`${contentHeight}`}
+                                >
+                                    <TournamentBracketCard
+                                        game={game}
+                                        summonerTeam={summonerTeam}
+                                    />
+                                </foreignObject>
+                                {roundNum != bracket.length - 1 && (
+                                    <g>
                                         <line
                                             x1={`${
-                                                roundNum * slotWidth + slotWidth
+                                                roundNum * slotWidth +
+                                                slotWidth / 2 +
+                                                contentWidth / 2 -
+                                                (contentWidth *
+                                                    (1 -
+                                                        contentInnerBoxWidthRatio)) /
+                                                    2
                                             }`}
                                             y1={`${
                                                 (Math.pow(2, roundNum) - 1) *
@@ -157,7 +138,7 @@ const TournamentBracket = (props) => {
                                             y2={`${
                                                 (Math.pow(2, roundNum) - 1) *
                                                     (slotHeight / 2) +
-                                                (gameNum - 1) *
+                                                gameNum *
                                                     (height /
                                                         Math.pow(
                                                             2,
@@ -165,16 +146,13 @@ const TournamentBracket = (props) => {
                                                                 1 -
                                                                 roundNum
                                                         )) +
-                                                slotHeight / 2 +
-                                                (slotHeight / 2) *
-                                                    Math.pow(2, roundNum)
+                                                slotHeight / 2
                                             }`}
+                                            className="linkAccountButton"
                                             stroke="#dbe9ff"
                                             strokeWidth="2"
                                         />
-                                    )}
-                                    {gameNum % 2 == 0 && (
-                                        <g>
+                                        {gameNum % 2 == 1 && (
                                             <line
                                                 x1={`${
                                                     roundNum * slotWidth +
@@ -202,7 +180,7 @@ const TournamentBracket = (props) => {
                                                     (Math.pow(2, roundNum) -
                                                         1) *
                                                         (slotHeight / 2) +
-                                                    gameNum *
+                                                    (gameNum - 1) *
                                                         (height /
                                                             Math.pow(
                                                                 2,
@@ -217,66 +195,121 @@ const TournamentBracket = (props) => {
                                                 stroke="#dbe9ff"
                                                 strokeWidth="2"
                                             />
-                                            <line
-                                                x1={`${
-                                                    roundNum * slotWidth +
-                                                    slotWidth
-                                                }`}
-                                                y1={`${
-                                                    (Math.pow(2, roundNum) -
-                                                        1) *
-                                                        (slotHeight / 2) +
-                                                    gameNum *
-                                                        (height /
+                                        )}
+                                        {gameNum % 2 == 0 && (
+                                            <g>
+                                                <line
+                                                    x1={`${
+                                                        roundNum * slotWidth +
+                                                        slotWidth
+                                                    }`}
+                                                    y1={`${
+                                                        (Math.pow(2, roundNum) -
+                                                            1) *
+                                                            (slotHeight / 2) +
+                                                        gameNum *
+                                                            (height /
+                                                                Math.pow(
+                                                                    2,
+                                                                    bracket.length -
+                                                                        1 -
+                                                                        roundNum
+                                                                )) +
+                                                        slotHeight / 2
+                                                    }`}
+                                                    x2={`${
+                                                        roundNum * slotWidth +
+                                                        slotWidth
+                                                    }`}
+                                                    y2={`${
+                                                        (Math.pow(2, roundNum) -
+                                                            1) *
+                                                            (slotHeight / 2) +
+                                                        gameNum *
+                                                            (height /
+                                                                Math.pow(
+                                                                    2,
+                                                                    bracket.length -
+                                                                        1 -
+                                                                        roundNum
+                                                                )) +
+                                                        slotHeight / 2 +
+                                                        (slotHeight / 2) *
                                                             Math.pow(
                                                                 2,
-                                                                bracket.length -
-                                                                    1 -
-                                                                    roundNum
-                                                            )) +
-                                                    slotHeight / 2 +
-                                                    (slotHeight / 2) *
-                                                        Math.pow(2, roundNum)
-                                                }`}
-                                                x2={`${
-                                                    roundNum * slotWidth +
-                                                    slotWidth +
-                                                    slotWidth / 2 -
-                                                    contentWidth / 2 +
-                                                    (contentWidth *
-                                                        (1 -
-                                                            contentInnerBoxWidthRatio)) /
-                                                        2
-                                                }`}
-                                                y2={`${
-                                                    (Math.pow(2, roundNum) -
-                                                        1) *
-                                                        (slotHeight / 2) +
-                                                    gameNum *
-                                                        (height /
+                                                                roundNum
+                                                            )
+                                                    }`}
+                                                    stroke="#dbe9ff"
+                                                    strokeWidth="2"
+                                                />
+                                                <line
+                                                    x1={`${
+                                                        roundNum * slotWidth +
+                                                        slotWidth
+                                                    }`}
+                                                    y1={`${
+                                                        (Math.pow(2, roundNum) -
+                                                            1) *
+                                                            (slotHeight / 2) +
+                                                        gameNum *
+                                                            (height /
+                                                                Math.pow(
+                                                                    2,
+                                                                    bracket.length -
+                                                                        1 -
+                                                                        roundNum
+                                                                )) +
+                                                        slotHeight / 2 +
+                                                        (slotHeight / 2) *
                                                             Math.pow(
                                                                 2,
-                                                                bracket.length -
-                                                                    1 -
-                                                                    roundNum
-                                                            )) +
-                                                    slotHeight / 2 +
-                                                    (slotHeight / 2) *
-                                                        Math.pow(2, roundNum)
-                                                }`}
-                                                stroke="#dbe9ff"
-                                                strokeWidth="2"
-                                            />
-                                        </g>
-                                    )}
-                                </g>
-                            )}
-                        </g>
-                    );
-                })
-            )}
-        </svg>
-    );
+                                                                roundNum
+                                                            )
+                                                    }`}
+                                                    x2={`${
+                                                        roundNum * slotWidth +
+                                                        slotWidth +
+                                                        slotWidth / 2 -
+                                                        contentWidth / 2 +
+                                                        (contentWidth *
+                                                            (1 -
+                                                                contentInnerBoxWidthRatio)) /
+                                                            2
+                                                    }`}
+                                                    y2={`${
+                                                        (Math.pow(2, roundNum) -
+                                                            1) *
+                                                            (slotHeight / 2) +
+                                                        gameNum *
+                                                            (height /
+                                                                Math.pow(
+                                                                    2,
+                                                                    bracket.length -
+                                                                        1 -
+                                                                        roundNum
+                                                                )) +
+                                                        slotHeight / 2 +
+                                                        (slotHeight / 2) *
+                                                            Math.pow(
+                                                                2,
+                                                                roundNum
+                                                            )
+                                                    }`}
+                                                    stroke="#dbe9ff"
+                                                    strokeWidth="2"
+                                                />
+                                            </g>
+                                        )}
+                                    </g>
+                                )}
+                            </g>
+                        );
+                    })
+                )}
+            </svg>
+        );
+    }
 };
 
 export default TournamentBracket;

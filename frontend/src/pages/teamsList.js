@@ -1,11 +1,11 @@
-import Alert from "react-bootstrap/Alert";
-
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 
 import services from "../services";
 
+import Alert from "react-bootstrap/Alert";
+import { Tooltip } from "react-tooltip";
 import OpenTeam from "../components/Teams Display/openTeam";
 import LoginGuard from "../components/Utilities/loginGuard";
 import LoadingAnimation from "../components/Utilities/loadingAnimation";
@@ -25,7 +25,9 @@ import SuppImageUnselected from "../assets/Positions/Position_Iron-Support.png";
 
 import "../assets/css/teamsList.css";
 
-function Test() {
+function TeamsList() {
+    const queryClient = useQueryClient();
+
     const [roleQueries, setRoleQueries] = useState([
         "Top",
         "Jungle",
@@ -35,6 +37,7 @@ function Test() {
     ]);
     const [inviteCode, setInviteCode] = useState("");
     const [showAlert, setShowAlert] = useState(false);
+    const [inQueue, setInQueue] = useState(false);
     const [searchParams] = useSearchParams();
     const navigate = useNavigate();
 
@@ -47,6 +50,25 @@ function Test() {
             }),
         retry: false,
     });
+
+    const { data: tournamentData, isLoading: isTournamentDataLoading } =
+        useQuery({
+            queryKey: ["tournament", searchParams.get("tournamentID")],
+            queryFn: async () =>
+                services.getTournamentData({
+                    tournamentID: searchParams.get("tournamentID"),
+                    summonerID: localStorage.getItem("summonerID"),
+                }),
+            onSuccess: (tournamentData) => {
+                setInQueue(
+                    tournamentData.quickJoinQueue.some(
+                        (summonerID) =>
+                            summonerID == localStorage.getItem("summonerID")
+                    )
+                );
+            },
+            retry: false,
+        });
 
     const {
         data: tournamentJoinStatus,
@@ -72,20 +94,44 @@ function Test() {
     };
 
     const quickJoin = () => {
-        services
-            .quickJoin({
-                summonerID: localStorage.getItem("summonerID"),
-                tournamentID: searchParams.get("tournamentID"),
-            })
-            .then((response) => {
-                if (response.data["message"] == "Joined Team") {
-                    navigate(`/team?teamID=${response.data["id"]}`);
-                } else if (response.data["message"] == "Created Team") {
-                    navigate(`/team?teamID=${response.data["id"]}`);
-                } else if (response.data["message"] == "Sent Requests") {
-                    setShowAlert(true);
-                }
-            });
+        if (!inQueue && !tournamentJoinStatus) {
+            services
+                .quickJoin({
+                    summonerID: localStorage.getItem("summonerID"),
+                    tournamentID: searchParams.get("tournamentID"),
+                })
+                .then((response) => {
+                    if (response["message"] == "Joined Team") {
+                        navigate(`/team?teamID=${response["id"]}`);
+                    } else if (response["message"] == "Created Team") {
+                        navigate(`/team?teamID=${response["id"]}`);
+                    } else if (response["message"] == "Sent Requests") {
+                        setShowAlert(true);
+                        queryClient.setQueryData(
+                            ["tournament", searchParams.get("tournamentID")],
+                            {
+                                ...tournamentData,
+                                quickJoinQueue: [
+                                    ...tournamentData.quickJoinQueue,
+                                    localStorage.getItem("summonerID"),
+                                ],
+                            }
+                        );
+                        setInQueue(true);
+                    }
+                });
+        }
+    };
+
+    const createTeam = () => {
+        if (
+            !tournamentJoinStatus &&
+            tournamentData.teams.length < tournamentData.teamsCap
+        ) {
+            navigate(
+                `/createTeam?tournamentID=${searchParams.get("tournamentID")}`
+            );
+        }
     };
 
     const resetRoleQuery = () => {
@@ -123,7 +169,7 @@ function Test() {
             )}
             <div className="tournamentFormTitleSectionWrapper">
                 <div className="tournamentFormSectionTitleDividerBarsBlueLeft" />
-                <h1 className="tournamentFormSectionTitleBlue">Open Teams</h1>
+                <h1 className="tournamentFormSectionTitleBlue">Team Menu</h1>
                 <div className="tournamentFormSectionTitleDividerBarsBlueRight" />
             </div>
             <div className="FilterWrapper">
@@ -199,11 +245,62 @@ function Test() {
                     </div>
                     <div className="quickJoinFilterWrapper">
                         <button
-                            className="joinedTeamsSubmitButton submitButtonUnlocked quickJoinButton blueTextHalo"
+                            className={`joinedTeamsSubmitButton ${
+                                inQueue || tournamentJoinStatus
+                                    ? "tournamentButtonDisabledHighlight"
+                                    : "submitButtonUnlocked"
+                            } quickJoinButton blueTextHalo`}
                             onClick={quickJoin}
+                            data-tooltip-id="quickJoinTooltip"
+                            data-tooltip-content={`${
+                                tournamentJoinStatus
+                                    ? "Already Joined a Team!"
+                                    : "Already in Queue!"
+                            }`}
                         >
-                            Quick Join
+                            {inQueue && !tournamentJoinStatus ? (
+                                <div class="lds-ellipsis">
+                                    <div></div>
+                                    <div></div>
+                                    <div></div>
+                                    <div></div>
+                                </div>
+                            ) : (
+                                "Quick Join"
+                            )}
                         </button>
+                        {(inQueue || tournamentJoinStatus) && (
+                            <Tooltip
+                                id="quickJoinTooltip"
+                                className="tooltipAddOn"
+                            />
+                        )}
+                        <button
+                            className={`joinedTeamsSubmitButton ${
+                                !tournamentJoinStatus &&
+                                tournamentData?.teams.length <
+                                    tournamentData?.teamsCap
+                                    ? "submitButtonUnlocked"
+                                    : "tournamentButtonDisabledHighlight"
+                            } quickJoinButton blueTextHalo`}
+                            onClick={createTeam}
+                            data-tooltip-id="createTeamTooltip"
+                            data-tooltip-content={`${
+                                tournamentJoinStatus
+                                    ? "Already Joined a Team!"
+                                    : "Team Capcity Reached, try Joining One!"
+                            }`}
+                        >
+                            Create Team
+                        </button>
+                        {(tournamentJoinStatus ||
+                            tournamentData?.teams.length >=
+                                tournamentData?.teamsCap) && (
+                            <Tooltip
+                                id="createTeamTooltip"
+                                className="tooltipAddOn"
+                            />
+                        )}
                     </div>
                 </div>
             </div>
@@ -230,4 +327,4 @@ function Test() {
     );
 }
 
-export default LoginGuard(Test);
+export default LoginGuard(TeamsList);

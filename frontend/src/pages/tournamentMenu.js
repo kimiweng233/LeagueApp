@@ -32,6 +32,8 @@ function TournamentMenu() {
     const tournamentDataLoading =
         isTournamentDataLoading && tournamentDataFetchStatus !== "idle";
 
+    console.log(tournamentData);
+
     return (
         <div>
             {tournamentDataLoading ? (
@@ -56,6 +58,7 @@ function TournamentMenu() {
                             <TournamentBracket
                                 bracket={tournamentData.bracket}
                                 summonerTeam={tournamentData.summonerTeam}
+                                startTime={tournamentData.startTime}
                                 setBracketWidth={setBracketWidth}
                                 setBracketHeight={setBracketHeight}
                             />

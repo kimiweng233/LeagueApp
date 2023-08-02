@@ -3,20 +3,22 @@ import requests
 import os
 
 RIOT_API_KEY = os.environ.get("RIOT_API_KEY")
-HTTP_HEADER = {
-    'X-Riot-Token': RIOT_API_KEY
-}
+HTTP_HEADER = {"X-Riot-Token": RIOT_API_KEY}
 CALLS = 20
 RATE_LIMIT = 60
 
+
 def getChampionsList():
-    version = requests.get("https://ddragon.leagueoflegends.com/api/versions.json").json()[0]
-    url = f'http://ddragon.leagueoflegends.com/cdn/{version}/data/en_US/champion.json'
+    version = requests.get(
+        "https://ddragon.leagueoflegends.com/api/versions.json"
+    ).json()[0]
+    url = f"http://ddragon.leagueoflegends.com/cdn/{version}/data/en_US/champion.json"
     try:
         response = requests.get(url)
         return response.json()
     except Exception as err:
         return err
+
 
 def championIdToName(championsList, id):
     for champion in championsList["data"]:
@@ -24,8 +26,11 @@ def championIdToName(championsList, id):
             return champion
     return "NA"
 
+
 def getSummonerInfo(summonerID):
-    url = f'https://na1.api.riotgames.com/lol/summoner/v4/summoners/by-name/{summonerID}'
+    url = (
+        f"https://na1.api.riotgames.com/lol/summoner/v4/summoners/by-name/{summonerID}"
+    )
     response = requests.get(url, headers=HTTP_HEADER)
     try:
         response = requests.get(url, headers=HTTP_HEADER)
@@ -33,31 +38,35 @@ def getSummonerInfo(summonerID):
     except Exception as err:
         return err
 
+
 def getSummonerAccountInfo(accountID):
-    url = f'https://na1.api.riotgames.com/lol/league/v4/entries/by-summoner/{accountID}'
+    url = f"https://na1.api.riotgames.com/lol/league/v4/entries/by-summoner/{accountID}"
     try:
         response = requests.get(url, headers=HTTP_HEADER)
         return response.json()
     except Exception as err:
         return err
+
 
 @sleep_and_retry
 @limits(calls=CALLS, period=RATE_LIMIT)
 def getMatchData(matchID):
-    url = f'https://americas.api.riotgames.com/lol/match/v5/matches/{matchID}'
+    url = f"https://americas.api.riotgames.com/lol/match/v5/matches/{matchID}"
     response = requests.get(url, headers=HTTP_HEADER)
     if response.status_code != 200:
-        raise Exception('API Response: {}'.format(response.status_code))
+        raise Exception("API Response: {}".format(response.status_code))
     return response.json()
 
+
 def getChampionMastery(puuid, championID):
-    url = f'https://na1.api.riotgames.com/lol/champion-mastery/v4/champion-masteries/by-puuid/{puuid}/by-champion/{championID}'
+    url = f"https://na1.api.riotgames.com/lol/champion-mastery/v4/champion-masteries/by-puuid/{puuid}/by-champion/{championID}"
     response = requests.get(url, headers=HTTP_HEADER)
     return response.json()
+
 
 def getTopMasteries(id):
     championsList = getChampionsList()
-    url = f'https://na1.api.riotgames.com/lol/champion-mastery/v4/champion-masteries/by-summoner/{id}/top?count=6'
+    url = f"https://na1.api.riotgames.com/lol/champion-mastery/v4/champion-masteries/by-summoner/{id}/top?count=6"
     response = requests.get(url, headers=HTTP_HEADER)
     try:
         response = requests.get(url, headers=HTTP_HEADER)
@@ -74,39 +83,47 @@ def getTopMasteries(id):
     except Exception as err:
         return err
 
+
 def PopulateMatchesData(puuid):
     matches = []
     championData = {}
-    url = f'https://americas.api.riotgames.com/lol/match/v5/matches/by-puuid/{puuid}/ids?start=0&count=50'
+    url = f"https://americas.api.riotgames.com/lol/match/v5/matches/by-puuid/{puuid}/ids?start=0&count=50"
     matches += requests.get(url, headers=HTTP_HEADER).json()
 
     matchCount = 0
 
     for match in matches:
         matchData = getMatchData(match)
-        participants = matchData['metadata']['participants']
+        participants = matchData["metadata"]["participants"]
         playerIndex = participants.index(puuid)
-        playerData = matchData['info']['participants'][playerIndex]
+        playerData = matchData["info"]["participants"][playerIndex]
 
-        if playerData['championId'] in championData:
-            championData[playerData['championId']]["totalKills"] += playerData['kills']
-            championData[playerData['championId']]["totalDeaths"] += playerData['deaths']
-            championData[playerData['championId']]["totalAssists"] += playerData['assists']
-            championData[playerData['championId']]["wins"] += 1 if playerData['win'] else 0
-            championData[playerData['championId']]["gameCount"] += 1
+        if playerData["championId"] in championData:
+            championData[playerData["championId"]]["totalKills"] += playerData["kills"]
+            championData[playerData["championId"]]["totalDeaths"] += playerData[
+                "deaths"
+            ]
+            championData[playerData["championId"]]["totalAssists"] += playerData[
+                "assists"
+            ]
+            championData[playerData["championId"]]["wins"] += (
+                1 if playerData["win"] else 0
+            )
+            championData[playerData["championId"]]["gameCount"] += 1
         else:
-            championData[playerData['championId']] = {
-                "totalKills": playerData['kills'],
-                "totalDeaths": playerData['deaths'],
-                "totalAssists": playerData['assists'],
-                "wins": 1 if playerData['win'] else 0,
+            championData[playerData["championId"]] = {
+                "totalKills": playerData["kills"],
+                "totalDeaths": playerData["deaths"],
+                "totalAssists": playerData["assists"],
+                "wins": 1 if playerData["win"] else 0,
                 "gameCount": 1,
             }
-        
+
         matchCount += 1
         print("finished " + str(matchCount) + " matche(s)")
-            
+
     return championData
+
 
 def processChampionsData(puuid, championsData):
     output = []

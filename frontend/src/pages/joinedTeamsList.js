@@ -76,7 +76,6 @@ function JoinedTeams() {
                                             </div>
                                             <div className="joinedTeamNameWrapper">
                                                 <CountdownClock
-                                                    className="joinTeamCountDown"
                                                     targetDateTime={
                                                         team["tournamentTime"]
                                                     }

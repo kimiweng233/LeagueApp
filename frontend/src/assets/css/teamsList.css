@@ -340,18 +340,25 @@ a:hover {
 
 .resetRolesQueryButtonWrapper {
     padding: 10px;
+    background-color: #356d85;
     border-style: outset;
-    border-color: #336c87c1;
-    border-width: 4px;
+    border-color: #0d2732c1;
+    box-shadow: 0px 7px 10px black;
+    border-width: 7px;
+    border-radius: 60%;
+    border-left-width: 0px;
+    border-right-width: 0px;
+    border-top-width: 0px;
 }
 
 .resetRolesQueryButtonWrapper:active {
-    border-style: inset;
+    background-color: rgba(72, 138, 169, 0.757);
+    border-bottom-width: 3px;
+    box-shadow: 0px 3px 4px black;
 }
 
 .resetRolesQueryButtonWrapper:hover {
-    background-color: #326b85c1;
-    border-color: #3e82a2c1;
+    background-color: rgba(72, 138, 169, 0.757);
 }
 
 .resetRolesQueryButton path {
@@ -360,20 +367,20 @@ a:hover {
 
 .FilterWrapper {
     width: 80%;
-    padding: 20px;
-    background-color: #29576dc1;
+    padding: 30px;
+    background-color: #204f63;
     display: flex;
     flex-direction: column;
     margin-top: 30px;
     margin-bottom: 20px;
     justify-content: center;
     align-items: center;
-    border-style: outset;
-    border-width: 7px;
-    border-color: #316983c1;
+    border-style: inset;
+    border-width: 4px;
+    border-color: #5181a67f;
     border-radius: 10px;
-    box-shadow: 0 0 2px #fff, 0 0 8px #91e0ff, 0 0 10px #7bdaff,
-        0 0 15px #17bdff, 0 0 20px #0073ff;
+    box-shadow: inset 0px 0px 40px black;
+    background-image: url("../Textures/black-felt.png");
 }
 
 .FilterWrapper > div:not(:last-child) {
@@ -406,19 +413,25 @@ a:hover {
     display: flex;
     justify-content: center;
     align-items: center;
+    justify-content: space-evenly;
 }
 
 .filterLabel {
     color: white;
     margin-right: 20px;
     white-space: nowrap;
+    text-shadow: 0 0 1px #fff, 0 0 2px #d2d2d2, 0 0 3px rgb(139, 139, 139);
 }
 
 .RolesQueryIcons {
     border-style: inset;
-    border-color: #316278c1;
+    border-color: #2a5a71c1;
     border-width: 3px;
-    background-color: #193745c1;
+    border-bottom-width: 2px;
+    border-right-width: 2px;
+    border-radius: 30px;
+    background-color: #194052c1;
+    box-shadow: inset 0px 0px 30px black;
     padding: 5px;
     margin-right: 20px;
 }
@@ -490,7 +503,7 @@ a:hover {
     padding-left: 10px;
     padding-right: 10px;
     padding-top: 5px;
-    padding-bottom: 8px;
+    padding-bottom: 5px;
 }
 
 .openTeamsWrapper {
@@ -499,4 +512,8 @@ a:hover {
     flex-direction: column;
     justify-content: center;
     align-items: center;
+}
+
+.tableCellWrapper {
+    text-align: center;
 }

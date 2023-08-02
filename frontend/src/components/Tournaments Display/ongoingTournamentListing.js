@@ -1,56 +1,47 @@
-import { useNavigate } from "react-router-dom";
+import { Tooltip } from "react-tooltip";
 
-import { TbTournament } from "react-icons/tb";
 import { BiSlideshow } from "react-icons/bi";
 
 import TournamentCard from "./tournamentCard";
 
 function OngoingTournament(props) {
-    const navigate = useNavigate();
-
-    const ViewBracketButton = (props) => {
-        return (
-            <button className="tournamentButton" onClick={props.onClick}>
-                <div className="tournamentButtonContentWrapper">
-                    <h2>View Bracket</h2>
-                    <TbTournament className="tournamentButtonBracketIcon" />
-                </div>
-            </button>
-        );
-    };
-
-    const viewBracketFunc = (props) => {
-        return {
-            onClick: () => navigate(`/tournamentPage?tournamentID=${props.id}`),
-        };
-    };
-
     const ViewLivestream = (props) => {
         return (
-            <button
-                disabled={props.liveLink === null}
-                className="tournamentButton"
-                onClick={props.onClick}
-            >
-                <div className="tournamentButtonContentWrapper">
-                    <h2>Watch Live</h2>
-                    <BiSlideshow className="tournamentButtonTVIcon" />
-                </div>
-            </button>
+            <div>
+                <button
+                    className={`tournamentCardButton joinedTeamsSubmitButton ${
+                        props.liveLink != null
+                            ? "tournamentButtonHighlight"
+                            : "tournamentButtonDisabledHighlight"
+                    } quickJoinButton`}
+                    onClick={(event) => {
+                        props.onClick(event);
+                    }}
+                    data-tooltip-id="watchLiveTooltip"
+                    data-tooltip-content="Watch Live!"
+                >
+                    <BiSlideshow className="tournamentButtonIcon" />
+                </button>
+                {props.liveLink != null && (
+                    <Tooltip id="watchLiveTooltip" className="tooltipAddOn" />
+                )}
+            </div>
         );
     };
 
     const viewLivestreamFunc = (props) => {
         return {
             liveLink: props.liveLink,
-            onClick: () => {
-                window.open(props.liveLink, "_blank");
+            onClick: (event) => {
+                event.stopPropagation();
+                if (props.liveLink != null) {
+                    window.open(props.liveLink, "_blank");
+                }
             },
         };
     };
 
     const WrappedComponent = TournamentCard([
-        { button: ViewBracketButton, props: viewBracketFunc },
         { button: ViewLivestream, props: viewLivestreamFunc },
     ]);
 

@@ -26,7 +26,7 @@ function App() {
         <QueryClientProvider client={queryClient}>
             <BrowserRouter>
                 <div className="appContentWrapper">
-                    <div>
+                    <div className="appContentInnerWrapper">
                         <AppNavbar />
                         <Routes>
                             <Route exact path="/" element={<Home />} />
