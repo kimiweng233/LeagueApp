@@ -47,6 +47,12 @@ class Team(models.Model):
 
 
 class Summoner(models.Model):
+    USER_ROLES = (
+        ("user", "user"),
+        ("admin", "admin"),
+    )
+
+    role = models.TextField(max_length=5, choices=USER_ROLES, default="user")
     summonerID = models.TextField(max_length=16, default="No Name", unique=True)
     profilePicture = models.IntegerField(default=1)
     tier = models.TextField(null=True, blank=True, default=None)

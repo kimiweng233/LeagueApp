@@ -34,7 +34,6 @@ def createTournament(request):
     serializer = TournamentSerializer(data=request.data)
     if serializer.is_valid():
         serializer.save()
-        print("hello")
         return Response(serializer.data)
     else:
         print(serializer.errors)
@@ -54,13 +53,16 @@ def createTeam(request):
                 team.members.all().count() < 5
                 and team.tournament.quickJoinQueue.all().count() > 0
             ):
-                joinTeamFunc(team.tournament.quickJoinQueue.all().first().id, teamID)
+                joinTeamFunc(
+                    team.tournament.quickJoinQueue.all().first().summonerID, teamID
+                )
         elif team.teamJoiningMode == "request-only":
             for summoner in team.tournament.quickJoinQueue.all():
                 summoner.requestedTeams.add(team)
                 summoner.save()
         return Response({"id": teamID}, 200)
     except Exception as e:
+        print(e)
         return Response({"error": str(e)}, 400)
 
 
@@ -144,7 +146,6 @@ def summonerLogin(request):
 
 @api_view(["POST"])
 def updateSummonerInfo(request):
-    time.sleep(5)
     populateSummonerInfo(request.data["summonerID"])
     return Response(200)
 
@@ -312,9 +313,14 @@ def removeFromTeam(request):
         for role, summoner in team.rolesFilled.items():
             if summoner == request.data["summonerID"]:
                 team.rolesFilled[role] = None
+        if (
+            team.tournament.quickJoinQueue.all().count() > 0
+            and team.teamJoiningMode == "public"
+        ):
+            joinTeamFunc(
+                team.tournament.quickJoinQueue.all().first().summonerID, team.id
+            )
         team.save()
-    if team.tournament.quickJoinQueue.all().count() > 0:
-        joinTeamFunc(team.tournament.quickJoinQueue.all().first().summonerID, team.id)
     return Response(200)
 
 
@@ -345,7 +351,7 @@ def changeTeamJoiningMode(request):
 def checkIfRequestedTeam(request):
     summoner = Summoner.objects.filter(summonerID=request.data["summonerID"]).first()
     status = summoner.requestedTeams.filter(pk=request.data["teamID"]).exists()
-    return Response({"status": status})
+    return Response(status)
 
 
 @api_view(["POST"])
