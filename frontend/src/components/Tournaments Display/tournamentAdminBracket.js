@@ -1,15 +1,17 @@
 import React, { useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 
-import TournamentBracketCard from "./tournamentBracketCard";
+import TournamentAdminBracketCard from "./tournamentAdminBracketCard";
 import TournamentBracketMatchSign from "./tournamentBracketMatchSign";
 import CountdownClock from "../Utilities/countDownClock";
 
-const TournamentBracket = (props) => {
+const TournamentAdminBracket = (props) => {
+    const [searchParams] = useSearchParams();
+
     const bracket = props.bracket;
-    const summonerTeam = props.summonerTeam;
     const startTime = props.startTime;
 
-    const slotWidth = 330;
+    const slotWidth = 350;
     const slotHeight = 140;
 
     const contentWidth = slotWidth * 0.9;
@@ -100,9 +102,9 @@ const TournamentBracket = (props) => {
                                     width={`${contentWidth}`}
                                     height={`${contentHeight}`}
                                 >
-                                    <TournamentBracketCard
+                                    <TournamentAdminBracketCard
                                         game={game}
-                                        summonerTeam={summonerTeam}
+                                        advanceRound={props.advanceRound}
                                     />
                                 </foreignObject>
                                 {roundNum != bracket.length - 1 && (
@@ -310,4 +312,4 @@ const TournamentBracket = (props) => {
     }
 };
 
-export default TournamentBracket;
+export default TournamentAdminBracket;

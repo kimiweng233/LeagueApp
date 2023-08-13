@@ -64,3 +64,19 @@
     top: 1px;
     margin-left: 7px;
 }
+
+.fallbackWrapper {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 10px solid red;
+}
+
+.fallbackMessage {
+    color: white;
+    text-shadow: 0px 0px 10px white;
+    margin: 0px;
+    padding: 0px;
+}

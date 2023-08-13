@@ -8,7 +8,7 @@ function Home() {
             <div className="homePageBanner">
                 <div className="homePageContentWrapper">
                     <h1 className="homePageTitle">
-                        Welcome to the Weekly Rumble!
+                        Welcome to the Weekly Rumble
                     </h1>
                     <button className="homePageButton">
                         <p className="homePageButtonText">

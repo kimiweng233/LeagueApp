@@ -111,7 +111,7 @@ const TeamCard = (ButtonsList) => {
                         setShowMembers(!showMembers);
                     }}
                 >
-                    <h4 className="memberBoardSign blackText">Team Members</h4>
+                    <h4 className="blackText">Team Members</h4>
                     <BiExpandVertical className="expandArrowIcon" />
                 </div>
                 {showMembers && <TeamMembersTable {...props} />}

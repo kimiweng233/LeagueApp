@@ -1,0 +1,62 @@
+import React from "react";
+import { useQuery } from "@tanstack/react-query";
+import { useNavigate } from "react-router-dom";
+
+import LoadingAnimation from "../components/Utilities/loadingAnimation";
+
+import services from "../services";
+
+import "../assets/css/dashboard.css";
+
+const Dashboard = () => {
+    const navigate = useNavigate();
+
+    const {
+        data: tournamentsList,
+        isLoading: isTournamentsLoading,
+        fetchStatus: tournamentsFetchStatus,
+    } = useQuery({
+        queryKey: ["tournaments-list"],
+        queryFn: async () => services.getTournamentsList(),
+        retry: false,
+    });
+
+    const tournamentsLoading =
+        isTournamentsLoading && tournamentsFetchStatus !== "idle";
+
+    if (tournamentsLoading) {
+        return <LoadingAnimation />;
+    } else {
+        return (
+            <div className="dashboardWrapper">
+                <div className="dashboardColumn">
+                    <h1 className="dashboardHighlight">Open</h1>
+                    {tournamentsList &&
+                        tournamentsList["open"].map((tournament, i) => (
+                            <a
+                                className="dashboardLink"
+                                key={i}
+                                href={`/tournamentPlanning?tournamentID=${tournament.id}`}
+                            >
+                                {tournament.tournamentName}
+                            </a>
+                        ))}
+                </div>
+                <div className="dashboardColumn">
+                    <h1 className="dashboardHighlight">Ongoing</h1>
+                    {tournamentsList &&
+                        tournamentsList["ongoing"].map((tournament, i) => (
+                            <a
+                                className="dashboardLink"
+                                key={i}
+                                href={`/tournamentDashboard?tournamentID=${tournament.id}`}
+                            >
+                                {tournament.tournamentName}
+                            </a>
+                        ))}
+                </div>
+            </div>
+        );
+    }
+};
+export default Dashboard;

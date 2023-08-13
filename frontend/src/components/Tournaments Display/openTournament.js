@@ -26,7 +26,7 @@ function OpenTournament(props) {
                     onClick={(event) => {
                         props.onClick(event);
                     }}
-                    data-tooltip-id="watchLiveTooltip"
+                    data-tooltip-id="createteamTooltip"
                     data-tooltip-content={
                         props.alreadyJoined
                             ? "Already Joined the Tournament!"

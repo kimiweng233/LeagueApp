@@ -5,7 +5,6 @@ import services from "../services";
 import LoginGuard from "../components/Utilities/loginGuard";
 
 import { BsClock } from "react-icons/bs";
-import { AiOutlinePlusCircle } from "react-icons/ai";
 
 import "../assets/css/tournamentCreationForm.css";
 
@@ -35,7 +34,7 @@ function TournamentForm() {
                 teams: [],
             })
             .then((response) => {
-                navigate("/tournaments");
+                navigate(`/tournamentPlanning?tournamentID=${response}`);
             })
             .catch((error) => {
                 console.log(error);

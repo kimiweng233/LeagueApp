@@ -1,12 +1,13 @@
 .teamCardWrapper:hover {
-    background-color: #39576a;
-    border-color: #37627b;
+    background-color: #305b70;
+    box-shadow: 0 0 20px #fff, 0 0 25px #65bdf0, 0 0 27px #2458ab,
+        0 0 30px #174082, 0 0 32px #0c2c61, inset 0 0 15px #fff,
+        inset 0 0 30px #65bdf0;
 }
 
 .teamCardWrapper:hover .cardTitleWrapper {
-    background-color: #3f6479;
-    border-color: #3b5e72;
-    box-shadow: 2px 2px 6px #233540;
+    background-color: #27485a;
+    box-shadow: inset 0px 0px 15px black;
 }
 
 .teamCardWrapper:hover .teamDetailsWrapper {
@@ -17,7 +18,6 @@
 
 .teamCardWrapper:hover .memberBoardWrapper {
     background-color: #c3e1e6;
-    border-color: #c7e0e5;
 }
 
 .membersTable tr:hover td {
@@ -38,15 +38,21 @@
 .teamCardWrapper {
     display: flex;
     flex-direction: column;
-    background-color: #2e4756;
-    padding: 20px;
-    width: 80%;
-    margin-bottom: 10px;
-    border-style: outset;
-    border-color: #2d5166;
-    border-width: 7px;
-    box-shadow: 5px 4px 10px black;
-    margin-top: 30px;
+    justify-content: center;
+    align-items: center;
+    width: 70vw;
+    background-color: #284e60;
+    padding: 30px;
+    margin-top: 50px;
+    border-style: solid;
+    border-color: white;
+    border-radius: 10px;
+    border-width: 3px;
+    box-shadow: 0 0 10px #fff, 0 0 15px #65bdf0, 0 0 17px #2458ab,
+        0 0 20px #174082, 0 0 22px #0c2c61, inset 0 0 5px #fff,
+        inset 0 0 20px #65bdf0, inset 0 0 9px #2458ab, inset 0 0 11px #174082,
+        inset 0 0 13px #0c2c61;
+    color: white;
 }
 
 .teamStatsWrapper {
@@ -69,15 +75,47 @@
     align-items: center;
 }
 
+.teamButtonOuterShadow {
+    border-radius: 10px;
+    box-shadow: 0px 6px 20px #06151e;
+}
+
 .teamButton {
-    width: 50%;
-    background-color: #bbdbd1;
-    font-size: 2.3em;
-    border-style: outset;
-    border-color: #d5ede6;
-    border-width: 4px;
-    box-shadow: 5px 4px 4px #111b21;
+    width: 200px;
+    height: 100px;
     padding: 20px;
+    font-size: 1.7em;
+    color: white;
+    background-color: #6cb1d8;
+    border-color: #294250;
+    border-width: 6px;
+    border-style: solid;
+    border-radius: 10px;
+    white-space: nowrap;
+    border-top-width: 0px;
+    border-left-width: 0px;
+    border-right-width: 0px;
+}
+
+.teamButton:hover {
+    background-color: #78bde4;
+}
+
+.teamButton:active {
+    position: relative;
+    top: 6px;
+    border-bottom-width: 0px;
+}
+
+.teamButton:active .teamButtonOuterShadow {
+    box-shadow: 0px 4px 0px #06151e;
+}
+
+.teamButtonHighlight {
+    box-shadow: 0 0 3px #fff, 0 0 4px #a3ddff, 0 0 5px #65bdf0, 0 0 6px #2458ab,
+        0 0 7px #174082, 0 0 8px #0c2c61, inset 0 0 3px #fff,
+        inset 0 0 4px #a3ddff, inset 0 0 5px #65bdf0, inset 0 0 6px #2458ab,
+        inset 0 0 7px #174082;
 }
 
 .ButtonWrapper {
@@ -152,14 +190,15 @@
 }
 
 .cardTitleWrapper {
-    background-color: #355466;
     margin-bottom: 10px;
     padding: 5px;
-    border-style: outset;
-    border-color: #2d4858;
-    border-width: 2px;
-    box-shadow: 4px 4px 6px #19262e;
-    border-radius: 10px;
+    background-color: #203c4b;
+    background-image: url("../Textures/black-felt.png");
+    border-color: #285367;
+    border-style: inset;
+    border-width: 3px;
+    border-radius: 15px;
+    box-shadow: inset 0px 0px 20px black;
 }
 
 .cardTitle {
@@ -172,6 +211,7 @@
 }
 
 .membersTableWrapper {
+    width: 100%;
     margin-top: 10px;
     background-color: #1c3441;
     border-style: inset;
@@ -219,9 +259,17 @@
     padding: 20px;
     margin-top: 20px;
     background-color: #adc9cd;
-    border-style: outset;
-    border-width: 5px;
-    border-color: #b3cbcf;
+    border-style: solid;
+    border-width: 6px;
+    border-radius: 10px;
+    border-color: #6c7b7d;
+    border-top-width: 0px;
+    border-left-width: 0px;
+    border-right-width: 0px;
+}
+
+.memberBoardWrapper:active {
+    border-bottom-width: 4px;
 }
 
 .tableCell {
@@ -282,6 +330,7 @@ a:hover {
 .expandArrowIcon {
     margin-left: auto;
     font-size: 2em;
+    color: rgb(79, 79, 79);
 }
 
 .gameCountText {
@@ -489,12 +538,10 @@ a:hover {
 }
 
 .quickJoinButton {
-    border-radius: 50%;
     background-color: #284e60;
     border-color: white;
     border-width: 4px;
     border-style: solid;
-    padding: 0px;
     display: flex;
     justify-content: center;
     align-items: center;

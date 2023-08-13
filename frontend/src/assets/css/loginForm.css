@@ -12,7 +12,6 @@
         inset 0 0 20px #65bdf0, inset 0 0 9px #2458ab, inset 0 0 11px #174082,
         inset 0 0 13px #0c2c61;
     color: white;
-    margin-bottom: 50px;
 }
 
 .loginInputWrapper {
@@ -25,7 +24,8 @@
 }
 
 .textNoButtomMargin {
-    margin-bottom: 0;
+    margin-bottom: 0px;
+    margin-right: 0px;
 }
 
 .linkAccountButtonBase {
@@ -34,7 +34,8 @@
     font-size: 30px;
     color: white;
     padding: 5px 10px 5px 10px;
-    width: 40%;
+    min-width: 40%;
+    white-space: nowrap;
 }
 
 .linkAccountButton {

@@ -23,7 +23,6 @@ class Tournament(models.Model):
     quickJoinQueue = models.ManyToManyField("Summoner", blank=True)
     startTime = models.DateTimeField(default=timezone.now)
     started = models.BooleanField(default=False)
-    ended = models.BooleanField(default=False)
     bracket = models.JSONField(default=dict, null=True, blank=True)
 
 
@@ -34,8 +33,8 @@ class Team(models.Model):
         ("invite-only", "invite-only"),
     )
 
-    teamName = models.TextField(max_length=100, default="Unnamed Team", unique=True)
-    teamAcronym = models.TextField(max_length=3, default="NUL", unique=True)
+    teamName = models.TextField(max_length=100, default="Unnamed Team")
+    teamAcronym = models.TextField(max_length=3, default="NUL")
     tournament = models.ForeignKey(
         Tournament, related_name="teams", on_delete=models.CASCADE
     )

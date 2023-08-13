@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { Tooltip } from "react-tooltip";
+import Alert from "react-bootstrap/Alert";
 
 import { AiOutlineCopy } from "react-icons/ai";
 import { FaListUl, FaSort } from "react-icons/fa";
@@ -19,6 +21,8 @@ function TeamMenu(props) {
     const [searchParams] = useSearchParams();
     const queryClient = useQueryClient();
 
+    const [showAlert, setShowAlert] = useState(false);
+
     const {
         data: teamData,
         isLoading: isTeamDataLoading,
@@ -31,8 +35,6 @@ function TeamMenu(props) {
             }),
         retry: false,
     });
-
-    console.log(teamData);
 
     const teamDataLoading = isTeamDataLoading && teamDataFetchStatus !== "idle";
 
@@ -168,6 +170,15 @@ function TeamMenu(props) {
 
     return (
         <div className="teamMenuWrapper">
+            {showAlert && (
+                <Alert
+                    variant="success"
+                    dismissible
+                    onClose={() => setShowAlert(false)}
+                >
+                    Team Invite Link Copied!
+                </Alert>
+            )}
             <div className="tournamentFormTitleSectionWrapper">
                 <div className="tournamentFormSectionTitleDividerBarsBlueLeft" />
                 <h1 className="tournamentFormSectionTitleBlue">Team Menu</h1>
@@ -197,10 +208,18 @@ function TeamMenu(props) {
                                         <AiOutlineCopy
                                             className="teamMenuButton"
                                             onClick={() => {
+                                                setShowAlert(true);
                                                 navigator.clipboard.writeText(
-                                                    teamData?.inviteCode
+                                                    window.location.origin.toString() +
+                                                        `/teamInvite?tournamentID=${teamData.tournament}&teamID=${teamData.id}`
                                                 );
                                             }}
+                                            data-tooltip-id="copyLinkTooltip"
+                                            data-tooltip-content="Copy Invite Link"
+                                        />
+                                        <Tooltip
+                                            id="copyLinkTooltip"
+                                            className="tooltipAddOn"
                                         />
                                     </div>
                                 </div>

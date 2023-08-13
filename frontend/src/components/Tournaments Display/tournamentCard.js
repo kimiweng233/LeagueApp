@@ -37,7 +37,7 @@ const TournamentCard = (ButtonsList) => {
                             </h3>
                             <div className="bracketDescriptionInfoTextWrapper">
                                 <h3 className="blueTextHalo bracketDescriptionInfoText">
-                                    {props.prizePool}
+                                    {props.prizePool}$
                                 </h3>
                             </div>
                         </div>
@@ -45,7 +45,7 @@ const TournamentCard = (ButtonsList) => {
                             <h3 className="bracketDescriptionTitle">Fee: </h3>
                             <div className="bracketDescriptionInfoTextWrapper">
                                 <h3 className="blueTextHalo bracketDescriptionInfoText">
-                                    {props.registrationFee}
+                                    {props.registrationFee}$
                                 </h3>
                             </div>
                         </div>

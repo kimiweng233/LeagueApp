@@ -1,6 +1,8 @@
 import { AiOutlineCopy } from "react-icons/ai";
 import { BsFillPlayFill } from "react-icons/bs";
 
+import "../../assets/css/tournamentBracket.css";
+
 function TournamentDescription(props) {
     const tournamentData = props.tournamentData;
     const summonerTeam = props.summonerTeam;
@@ -24,7 +26,7 @@ function TournamentDescription(props) {
                 }
             }
         }
-        return "Eliminated";
+        return "Eliminated / Not Admitted";
     };
 
     const currentStatus = getCurrentStatus();
@@ -47,9 +49,9 @@ function TournamentDescription(props) {
                             <h2 className="bracketDescriptionTitle">
                                 &nbsp; Not Joined
                             </h2>
-                        ) : currentStatus == "Eliminated" ? (
-                            <h2 classname="bracketDescriptionTitle">
-                                &nbsp; Eliminated
+                        ) : currentStatus == "Eliminated / Not Admitted" ? (
+                            <h2 className="bracketDescriptionTitle">
+                                &nbsp; Eliminated / Not Admitted
                             </h2>
                         ) : currentStatus == "Waiting to Start" ? (
                             <h2 className="bracketDescriptionTitle">

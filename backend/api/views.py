@@ -17,8 +17,8 @@ import math
 
 @api_view(["GET"])
 def getTournamentsList(request):
-    ongoingTournaments = Tournament.objects.filter(ended=False, started=True).all()
-    openTournaments = Tournament.objects.filter(ended=False, started=False).all()
+    ongoingTournaments = Tournament.objects.filter(started=True).all()
+    openTournaments = Tournament.objects.filter(started=False).all()
     ongoingTournamentsSerializer = TournamentSerializer(ongoingTournaments, many=True)
     openTournamentsSerializer = TournamentSerializer(openTournaments, many=True)
     return Response(
@@ -34,7 +34,7 @@ def createTournament(request):
     serializer = TournamentSerializer(data=request.data)
     if serializer.is_valid():
         serializer.save()
-        return Response(serializer.data)
+        return Response(serializer.data["id"], 200)
     else:
         print(serializer.errors)
         return Response(serializer.errors)
@@ -62,8 +62,7 @@ def createTeam(request):
                 summoner.save()
         return Response({"id": teamID}, 200)
     except Exception as e:
-        print(e)
-        return Response({"error": str(e)}, 400)
+        return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 def createTeamFunc(tournamentID, teamData):
@@ -104,7 +103,9 @@ def getTournamentData(request):
     summoner = Summoner.objects.filter(summonerID=request.data["summonerID"]).first()
     tournament = Tournament.objects.filter(id=request.data["tournamentID"]).first()
     tournamentData = model_to_dict(tournament)
-    tournamentData["teams"] = list(tournament.teams.values())
+    tournamentData["teams"] = [
+        appendMembersCount(team) for team in tournament.teams.all()
+    ]
     tournamentData["quickJoinQueue"] = [
         SummonerSerializer(summoner).data["summonerID"]
         for summoner in tournamentData["quickJoinQueue"]
@@ -114,6 +115,12 @@ def getTournamentData(request):
             if team.tournament.id == tournament.id:
                 tournamentData["summonerTeam"] = team.teamName
     return Response(tournamentData)
+
+
+def appendMembersCount(team):
+    out = model_to_dict(team)
+    out["membersCount"] = len(team.members.all())
+    return out
 
 
 @api_view(["POST"])
@@ -134,14 +141,19 @@ def summonerLogin(request):
         summoner.save()
         try:
             populateSummonerInfo(summoner.summonerID)
-            return Response(200)
+            return Response(summoner.role, 200)
         except Exception as err:
             summoner.delete()
             return Response(
                 "Error linking account, please try again!",
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR,
             )
-    return Response(200)
+    else:
+        summoner = Summoner.objects.filter(
+            summonerID=request.data["summonerID"]
+        ).first()
+        print(model_to_dict(summoner))
+    return Response(summoner.role, 200)
 
 
 @api_view(["POST"])
@@ -200,7 +212,7 @@ def joinTeam(request):
             Response(
                 "Team capacity reached!", status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
-        if team.tournament.started or team.tournament.ended:
+        if team.tournament.started:
             Response(
                 "Team joining phase has ended!",
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR,
@@ -446,12 +458,18 @@ def generateInviteCode(length):
 
 
 @api_view(["POST"])
-def createBracket(request):
+def startTournament(request):
     tournament = Tournament.objects.get(pk=request.data["tournamentID"])
+    tournament.started = True
     teams = [
         {"id": team.id, "Name": team.teamName, "Score": 0, "Status": "Playing"}
         for team in list(tournament.teams.all())
+        if not team.teamName in request.data["omittedTeams"]
     ]
+    if len(teams) < 2:
+        return Response(
+            "Not enough teams to start!", status=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )
     # teams = [
     #     {'id': 1, 'Name': 'Team 1', 'Score': 0, 'Status': 'Playing'},
     #     {'id': 2, 'Name': 'Team 2', 'Score': 0, 'Status': 'Playing'},
@@ -459,25 +477,25 @@ def createBracket(request):
     # ]
 
     # teams = [
-    #     {'id': 1, 'Name': 'Team 1', 'Score': 0, 'Status': 'Playing'},
-    #     {'id': 2, 'Name': 'Team 2', 'Score': 0, 'Status': 'Playing'},
-    #     {'id': 3, 'Name': 'Team 3', 'Score': 0, 'Status': 'Playing'},
-    #     {'id': 4, 'Name': 'Team 4', 'Score': 0, 'Status': 'Playing'},
-    #     {'id': 5, 'Name': 'Team 5', 'Score': 0, 'Status': 'Playing'},
-    #     {'id': 6, 'Name': 'Team 6', 'Score': 0, 'Status': 'Playing'},
-    #     {'id': 7, 'Name': 'Team 7', 'Score': 0, 'Status': 'Playing'},
-    #     {'id': 8, 'Name': 'Team 8', 'Score': 0, 'Status': 'Playing'},
-    #     {'id': 9, 'Name': 'Team 9', 'Score': 0, 'Status': 'Playing'},
-    #     {'id': 10, 'Name': 'Team 10', 'Score': 0, 'Status': 'Playing'},
-    #     {'id': 11, 'Name': 'Team 11', 'Score': 0, 'Status': 'Playing'},
-    #     {'id': 12, 'Name': 'Team 12', 'Score': 0, 'Status': 'Playing'},
-    #     {'id': 13, 'Name': 'Team 13', 'Score': 0, 'Status': 'Playing'},
-    #     {'id': 14, 'Name': 'Team 14', 'Score': 0, 'Status': 'Playing'},
-    #     {'id': 15, 'Name': 'Team 15', 'Score': 0, 'Status': 'Playing'},
-    #     {'id': 16, 'Name': 'Team 16', 'Score': 0, 'Status': 'Playing'},
-    #     {'id': 17, 'Name': 'Team 17', 'Score': 0, 'Status': 'Playing'},
-    #     {'id': 18, 'Name': 'Team 18', 'Score': 0, 'Status': 'Playing'},
-    #     {'id': 19, 'Name': 'Team 18', 'Score': 0, 'Status': 'Playing'},
+    #     {"id": 1, "Name": "Team 1", "Score": 0, "Status": "Playing"},
+    #     {"id": 2, "Name": "Team 2", "Score": 0, "Status": "Playing"},
+    #     {"id": 3, "Name": "Team 3", "Score": 0, "Status": "Playing"},
+    #     {"id": 4, "Name": "Team 4", "Score": 0, "Status": "Playing"},
+    #     {"id": 5, "Name": "Team 5", "Score": 0, "Status": "Playing"},
+    #     {"id": 6, "Name": "Team 6", "Score": 0, "Status": "Playing"},
+    #     {"id": 7, "Name": "Team 7", "Score": 0, "Status": "Playing"},
+    #     {"id": 8, "Name": "Team 8", "Score": 0, "Status": "Playing"},
+    #     {"id": 9, "Name": "Team 9", "Score": 0, "Status": "Playing"},
+    #     {"id": 10, "Name": "Team 10", "Score": 0, "Status": "Playing"},
+    #     {"id": 11, "Name": "Team 11", "Score": 0, "Status": "Playing"},
+    #     {"id": 12, "Name": "Team 12", "Score": 0, "Status": "Playing"},
+    #     {"id": 13, "Name": "Team 13", "Score": 0, "Status": "Playing"},
+    #     {"id": 14, "Name": "Team 14", "Score": 0, "Status": "Playing"},
+    #     {"id": 15, "Name": "Team 15", "Score": 0, "Status": "Playing"},
+    #     {"id": 16, "Name": "Team 16", "Score": 0, "Status": "Playing"},
+    #     {"id": 17, "Name": "Team 17", "Score": 0, "Status": "Playing"},
+    #     {"id": 18, "Name": "Team 18", "Score": 0, "Status": "Playing"},
+    #     {"id": 19, "Name": "Team 18", "Score": 0, "Status": "Playing"},
     # ]
     random.shuffle(teams)
     gameNumber = 1
@@ -562,3 +580,132 @@ def createBracket(request):
     tournament.save()
 
     return Response(200)
+
+
+@api_view(["POST"])
+def updateBracketScore(request):
+    tournament = Tournament.objects.get(pk=request.data["tournamentID"])
+    for i in range(len(tournament.bracket) - 1, -1, -1):
+        for j in range(0, len(tournament.bracket[i])):
+            if (
+                tournament.bracket[i][j]["Team 1"]
+                and tournament.bracket[i][j]["Team 1"]["id"] == request.data["id"]
+            ):
+                tournament.bracket[i][j]["Team 1"]["Score"] = request.data["newScore"]
+                tournament.save()
+                return Response(tournament.bracket, 200)
+            if (
+                tournament.bracket[i][j]["Team 2"]
+                and tournament.bracket[i][j]["Team 2"]["id"] == request.data["id"]
+            ):
+                tournament.bracket[i][j]["Team 2"]["Score"] = request.data["newScore"]
+                tournament.save()
+                return Response(tournament.bracket, 200)
+    return Response(
+        "Team not found! Weird!", status=status.HTTP_500_INTERNAL_SERVER_ERROR
+    )
+
+
+@api_view(["POST"])
+def declareRoundWinner(request):
+    tournament = Tournament.objects.get(pk=request.data["tournamentID"])
+    for i in range(len(tournament.bracket) - 1, -1, -1):
+        for j in range(0, len(tournament.bracket[i])):
+            if tournament.bracket[i][j]["Game Number"] == request.data["nextGameNum"]:
+                if not tournament.bracket[i][j]["Team 1"]:
+                    tournament.bracket[i][j]["Team 1"] = {
+                        "id": request.data["id"],
+                        "Name": request.data["teamName"],
+                        "Score": 0,
+                        "Status": "Playing",
+                    }
+                else:
+                    tournament.bracket[i][j]["Team 2"] = {
+                        "id": request.data["id"],
+                        "Name": request.data["teamName"],
+                        "Score": 0,
+                        "Status": "Playing",
+                    }
+                if (
+                    tournament.bracket[i][j]["Team 1"]
+                    and tournament.bracket[i][j]["Team 2"]
+                ):
+                    tournament.bracket[i][j]["Status"] = "Playing"
+            if tournament.bracket[i][j]["Game Number"] == request.data["currGameNum"]:
+                if (
+                    tournament.bracket[i][j]["Team 1"]["Name"]
+                    == request.data["teamName"]
+                ):
+                    tournament.bracket[i][j]["Team 1"]["Status"] = "Win"
+                    tournament.bracket[i][j]["Team 2"]["Status"] = "Loss"
+                else:
+                    tournament.bracket[i][j]["Team 1"]["Status"] = "Loss"
+                    tournament.bracket[i][j]["Team 2"]["Status"] = "Win"
+                tournament.bracket[i][j]["Status"] = "Ended"
+    tournament.save()
+    return Response(tournament.bracket, 200)
+
+
+@api_view(["POST"])
+def endTournament(request):
+    tournament = Tournament.objects.get(pk=request.data["tournamentID"])
+    tournament.delete()
+    return Response(200)
+
+
+@api_view(["POST"])
+def updateTournamentTeams(request):
+    try:
+        raise APIException("fuck!")
+        tournament = Tournament.objects.get(pk=request.data["tournamentID"])
+        for teamData in request.data["teamData"]:
+            newTeam = Team(
+                teamName=teamData[0],
+                teamAcronym=teamData[1],
+                tournament=tournament,
+                teamJoiningMode="public",
+                rolesFilled={
+                    "Top": None,
+                    "Jungle": None,
+                    "Mid": None,
+                    "Bot": None,
+                    "Support": None,
+                },
+                inviteCode=generate_random_string(6),
+            )
+            newTeam.save()
+        return Response(
+            [appendMembersCount(team) for team in tournament.teams.all()], 200
+        )
+    except Exception as e:
+        return Response(str(e), status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+def generate_random_string(n):
+    characters = string.ascii_uppercase + string.digits
+    random_string = "".join(random.choice(characters) for _ in range(n))
+    return random_string
+
+
+@api_view(["POST"])
+def updateTournamentData(request):
+    try:
+        tournament = Tournament.objects.get(pk=request.data["tournamentID"])
+        tournament.startTime = request.data["startTime"]
+        tournament.teamsCap = request.data["teamsCap"]
+        tournament.prizePool = request.data["prizePool"]
+        tournament.registrationFee = request.data["registrationFee"]
+        tournament.liveLink = request.data["liveLink"]
+        tournament.save()
+        return Response(
+            {
+                "startTime": tournament.startTime,
+                "teamsCap": tournament.teamsCap,
+                "prizePool": tournament.prizePool,
+                "registrationFee": tournament.registrationFee,
+                "liveLink": tournament.liveLink,
+            },
+            200,
+        )
+    except Exception as e:
+        return Response(str(e), status=status.HTTP_500_INTERNAL_SERVER_ERROR)

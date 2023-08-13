@@ -1,33 +1,45 @@
-import React, { useState, useEffect } from "react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 
-import { MdOutlineAddBox } from "react-icons/md";
-
+import LoadingAnimation from "../Utilities/loadingAnimation";
 import TeamCard from "./teamCard";
 
 import services from "../../services";
 
 function TeamListing(props) {
+    const queryClient = useQueryClient();
     const navigate = useNavigate();
 
-    const [teamRequestStatus, setRequestJoinStatus] = useState(false);
-
-    useEffect(() => {
-        services
-            .checkIfRequestedTeam({
+    const {
+        data: teamRequestStatus,
+        isLoading: isTeamRequestStatusLoading,
+        fetchStatus: teamRequestStatusFetchStatus,
+    } = useQuery({
+        queryKey: [
+            "team-request-status",
+            props.id,
+            localStorage.getItem("summonerID"),
+        ],
+        queryFn: async () =>
+            services.checkIfRequestedTeam({
                 summonerID: localStorage.getItem("summonerID"),
                 teamID: props.id,
-            })
-            .then((response) => {
-                setRequestJoinStatus(response.data["status"]);
-            });
-    }, [props.id]);
+            }),
+        retry: false,
+    });
+
+    const teamRequestStatusLoading =
+        isTeamRequestStatusLoading && teamRequestStatusFetchStatus !== "idle";
 
     const joinTeamButton = (props) => {
         if (props.teamJoiningMode === "public") {
             return (
                 <button
-                    className="teamButton"
+                    className={`teamButton blueTextHalo ${
+                        props.tournamentJoinStatus
+                            ? "tournamentButtonDisabledHighlight"
+                            : "tournamentButtonHighlight"
+                    }`}
                     disabled={props.tournamentJoinStatus}
                     onClick={props.onClick}
                 >
@@ -35,29 +47,37 @@ function TeamListing(props) {
                         {props.tournamentJoinStatus
                             ? "Already Registered"
                             : "Join"}
-                        {!props.tournamentJoinStatus && (
-                            <MdOutlineAddBox className="ButtonIcon" />
-                        )}
                     </div>
                 </button>
             );
         } else if (props.teamJoiningMode === "request-only") {
-            return (
-                <button
-                    className="teamButton"
-                    disabled={props.tournamentJoinStatus || teamRequestStatus}
-                    onClick={props.onClick}
-                >
-                    <div className="ButtonWrapper">
-                        {props.tournamentJoinStatus
-                            ? "Already Registered"
-                            : "Send Request"}
-                        {!props.tournamentJoinStatus && (
-                            <MdOutlineAddBox className="ButtonIcon" />
-                        )}
+            if (teamRequestStatusLoading) {
+                return <LoadingAnimation />;
+            } else {
+                return (
+                    <div className="teamButtonOuterShadow">
+                        <button
+                            className={`teamButton blueTextHalo ${
+                                props.tournamentJoinStatus || teamRequestStatus
+                                    ? "tournamentButtonDisabledHighlight"
+                                    : "teamButtonHighlight"
+                            }`}
+                            disabled={
+                                props.tournamentJoinStatus || teamRequestStatus
+                            }
+                            onClick={props.onClick}
+                        >
+                            <div className="ButtonWrapper">
+                                {props.tournamentJoinStatus
+                                    ? "Already Registered"
+                                    : teamRequestStatus
+                                    ? "Request Sent"
+                                    : "Send Request"}
+                            </div>
+                        </button>
                     </div>
-                </button>
-            );
+                );
+            }
         }
     };
 
@@ -83,7 +103,14 @@ function TeamListing(props) {
                         summonerID: localStorage.getItem("summonerID"),
                         teamID: props.id,
                     });
-                    setRequestJoinStatus(true);
+                    queryClient.setQueryData(
+                        [
+                            "team-request-status",
+                            props.id,
+                            localStorage.getItem("summonerID"),
+                        ],
+                        true
+                    );
                 },
                 teamJoiningMode: props.teamJoiningMode,
                 tournamentJoinStatus: props.tournamentJoinStatus,

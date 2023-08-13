@@ -1,6 +1,3 @@
-import { GiCrossedSwords } from "react-icons/gi";
-import LoadingAnimation from "../Utilities/loadingAnimation";
-
 import "../../assets/css/tournamentBracket.css";
 
 function TournamentBracketMatchSign(props) {

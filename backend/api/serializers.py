@@ -68,7 +68,6 @@ class TournamentSerializer(serializers.ModelSerializer):
             "registrationFee",
             "startTime",
             "started",
-            "ended",
             "teams",
             "bracket",
             "liveLink",

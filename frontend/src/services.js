@@ -7,7 +7,9 @@ const getTournamentsList = () => {
 };
 
 const createTournament = (data) => {
-    return http.post(`/createTournament/`, data);
+    return http.post(`/createTournament/`, data).then((response) => {
+        return response.data;
+    });
 };
 
 const createTeam = (data) => {
@@ -33,7 +35,9 @@ const getTournamentData = (data) => {
 };
 
 const summonerLogin = (data) => {
-    return http.post(`/summonerLogin/`, data);
+    return http.post(`/summonerLogin/`, data).then((response) => {
+        return response.data;
+    });
 };
 
 const joinTeam = (data) => {
@@ -89,7 +93,9 @@ const changeTeamJoiningMode = (data) => {
 };
 
 const checkIfRequestedTeam = (data) => {
-    return http.post(`/checkIfRequestedTeam/`, data);
+    return http.post(`/checkIfRequestedTeam/`, data).then((response) => {
+        return response.data;
+    });
 };
 
 const getTeamsWithVacancy = (data) => {
@@ -104,8 +110,34 @@ const quickJoin = (data) => {
     });
 };
 
-const createBracket = (data) => {
-    return http.post(`/createBracket/`, data);
+const updateBracketScore = (data) => {
+    return http.post(`/updateBracketScore/`, data).then((response) => {
+        return response.data;
+    });
+};
+
+const declareRoundWinner = (data) => {
+    return http.post(`/declareRoundWinner/`, data).then((response) => {
+        return response.data;
+    });
+};
+
+const endTournament = (data) => {
+    return http.post(`/endTournament/`, data);
+};
+
+const startTournament = (data) => {
+    return http.post(`/startTournament/`, data);
+};
+
+const updateTournamentTeams = (data) => {
+    return http.post(`/updateTournamentTeams/`, data).then((response) => {
+        return response.data;
+    });
+};
+
+const updateTournamentData = (data) => {
+    return http.post(`/updateTournamentData/`, data);
 };
 
 const functions = {
@@ -130,7 +162,12 @@ const functions = {
     getTeamsWithVacancy,
     quickJoin,
     rejectJoinRequest,
-    createBracket,
+    updateBracketScore,
+    declareRoundWinner,
+    endTournament,
+    updateTournamentTeams,
+    startTournament,
+    updateTournamentData,
 };
 
 export default functions;

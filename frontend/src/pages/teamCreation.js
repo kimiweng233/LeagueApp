@@ -47,6 +47,12 @@ function TeamForm() {
 
     const isFormValid = teamName && teamAcronym;
 
+    const handleTeamName = (teamName) => {
+        teamName = teamName.replace(/[^a-zA-Z0-9]/g, "");
+        teamName = teamName.slice(0, 20);
+        setTeamName(teamName);
+    };
+
     const handleTeamAcronym = (acronym) => {
         acronym = acronym.replace(/[^a-zA-Z0-9]/g, "");
         acronym = acronym.slice(0, 3);
@@ -67,7 +73,7 @@ function TeamForm() {
                     <input
                         type="text"
                         value={teamName}
-                        onChange={(e) => setTeamName(e.target.value)}
+                        onChange={(e) => handleTeamName(e.target.value)}
                         className="formInputField teamCreationTitleInput"
                     />
                     <input

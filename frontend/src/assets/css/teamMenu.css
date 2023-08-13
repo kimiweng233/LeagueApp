@@ -61,6 +61,10 @@
     stroke: white;
 }
 
+.teamMenuButton:focus {
+    outline: none;
+}
+
 .copyButtonWrapper {
     position: relative;
     bottom: 3px;

@@ -1,17 +1,17 @@
-import React, { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import React from "react";
+import { Navigate, useLocation } from "react-router-dom";
 
 const LoginGuard = (Component) => {
     function WrappedComponent(props) {
-        const navigate = useNavigate();
-
-        useEffect(() => {
-            if (localStorage.getItem("summonerID") === null) {
-                navigate("/linkAccount");
-            }
-        }, [navigate]);
-
-        return <Component />;
+        const location = useLocation();
+        return localStorage.getItem("summonerID") ? (
+            <Component />
+        ) : (
+            <Navigate
+                to="/linkAccount"
+                state={{ prevUrl: `${location.pathname}${location.search}` }}
+            />
+        );
     }
     return WrappedComponent;
 };

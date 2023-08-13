@@ -2,8 +2,6 @@ import React from "react";
 
 import TournamentBracketTeam from "./tournamentBracketTeam";
 
-import "../../assets/css/tournamentBracket.css";
-
 function TournamentBracketCard(props) {
     const game = props.game;
     const summonerTeam = props.summonerTeam;

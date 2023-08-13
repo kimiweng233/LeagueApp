@@ -23,5 +23,10 @@ urlpatterns = [
     path("checkIfRequestedTeam/", views.checkIfRequestedTeam),
     path("getTeamsWithVacancy/", views.getTeamsWithVacancy),
     path("quickJoin/", views.quickJoin),
-    path("createBracket/", views.createBracket),
+    path("declareRoundWinner/", views.declareRoundWinner),
+    path("updateBracketScore/", views.updateBracketScore),
+    path("endTournament/", views.endTournament),
+    path("updateTournamentTeams/", views.updateTournamentTeams),
+    path("startTournament/", views.startTournament),
+    path("updateTournamentData/", views.updateTournamentData),
 ]

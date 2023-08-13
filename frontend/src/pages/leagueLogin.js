@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useMutation } from "@tanstack/react-query";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 import LoadingScreen from "../components/Utilities/loadingScreen";
 
@@ -13,6 +13,7 @@ import "../assets/css/loginForm.css";
 function LeagueLogin() {
     const [showAlert, setShowAlert] = useState(false);
     const [summonerID, setSummonerID] = useState("");
+    const location = useLocation();
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -28,9 +29,10 @@ function LeagueLogin() {
 
     const { mutate, isLoading, error } = useMutation({
         mutationFn: () => services.summonerLogin({ summonerID: summonerID }),
-        onSuccess: () => {
+        onSuccess: (summonerData) => {
             localStorage.setItem("summonerID", summonerID);
-            window.location.href = "/";
+            localStorage.setItem("role", summonerData);
+            navigate(location?.state?.prevUrl ? location?.state?.prevUrl : "/");
         },
         onError: (error) => {
             setShowAlert(true);

@@ -20,6 +20,7 @@ function TournamentMenu() {
         data: tournamentData,
         isLoading: isTournamentDataLoading,
         fetchStatus: tournamentDataFetchStatus,
+        isError: tournamentDataError,
     } = useQuery({
         queryKey: ["tournament", searchParams.get("tournamentID")],
         queryFn: async () =>
@@ -28,11 +29,20 @@ function TournamentMenu() {
                 summonerID: localStorage.getItem("summonerID"),
             }),
         retry: false,
+        refetchInterval: 15000,
     });
     const tournamentDataLoading =
         isTournamentDataLoading && tournamentDataFetchStatus !== "idle";
 
-    console.log(tournamentData);
+    if (tournamentDataError) {
+        return (
+            <div className="tournamentMenuWrapper">
+                <h1 className="fallbackMessage">
+                    This tournament does not exist or has ended
+                </h1>
+            </div>
+        );
+    }
 
     return (
         <div>

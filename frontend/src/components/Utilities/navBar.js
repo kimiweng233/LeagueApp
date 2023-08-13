@@ -46,7 +46,7 @@ const AppNavbar = () => {
                 sticky="top"
             >
                 <Container>
-                    <Navbar.Brand href="/home" style={{ fontSize: "1.3em" }}>
+                    <Navbar.Brand href="/" style={{ fontSize: "1.3em" }}>
                         <img
                             src="https://cdn.discordapp.com/icons/745073887171313736/2ce80930ac31de1e9842cd72f9828a8a.webp?size=240"
                             alt="Server Icon"
@@ -82,6 +82,26 @@ const AppNavbar = () => {
                                     My Teams
                                 </Nav.Link>
                             )}
+                            {localStorage.getItem("summonerID") != null &&
+                                localStorage.getItem("role") == "admin" && (
+                                    <Nav.Link
+                                        href="/createTournament"
+                                        style={{ fontSize: "1.3em" }}
+                                        className="navText"
+                                    >
+                                        New Tournament
+                                    </Nav.Link>
+                                )}
+                            {localStorage.getItem("summonerID") != null &&
+                                localStorage.getItem("role") == "admin" && (
+                                    <Nav.Link
+                                        href="/dashboard"
+                                        style={{ fontSize: "1.3em" }}
+                                        className="navText"
+                                    >
+                                        Dashboard
+                                    </Nav.Link>
+                                )}
                         </Nav>
                         <Nav className="d-flex align-items-center">
                             {localStorage.getItem("summonerID") == null ? (

@@ -14,10 +14,13 @@ import TeamMenuPublic from "./pages/teamMenuPublic";
 import TournamentMenu from "./pages/tournamentMenu";
 import LeagueLogin from "./pages/leagueLogin";
 import JoinedTeams from "./pages/joinedTeamsList";
+import TeamInvite from "./pages/teamInvite";
+import Dashboard from "./pages/dashboard";
+import TournamentDashboard from "./pages/tournamentDashboard";
+import TournamentPlanning from "./pages/tournamentPlanning";
 import AppNavbar from "./components/Utilities/navBar";
 import Footer from "./components/Utilities/footer";
-
-import Test from "./pages/test";
+import Fallback from "./pages/fallback";
 
 function App() {
     const queryClient = new QueryClient();
@@ -71,8 +74,27 @@ function App() {
                                 path="/joinedTeams"
                                 element={<JoinedTeams />}
                             />
-                            <Route exact path="/test" element={<Test />} />
-                            <Route exact path="/*" element={<Home />} />
+                            <Route
+                                exact
+                                path="/teamInvite"
+                                element={<TeamInvite />}
+                            />
+                            <Route
+                                exact
+                                path="/dashboard"
+                                element={<Dashboard />}
+                            />
+                            <Route
+                                exact
+                                path="/tournamentDashboard"
+                                element={<TournamentDashboard />}
+                            />
+                            <Route
+                                exact
+                                path="/tournamentPlanning"
+                                element={<TournamentPlanning />}
+                            />
+                            <Route exact path="/*" element={<Fallback />} />
                         </Routes>
                         <ReactQueryDevtools initialIsOpen={false} />
                     </div>

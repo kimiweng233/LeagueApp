@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 
@@ -259,7 +259,7 @@ function TeamsList() {
                             }`}
                         >
                             {inQueue && !tournamentJoinStatus ? (
-                                <div class="lds-ellipsis">
+                                <div className="lds-ellipsis">
                                     <div></div>
                                     <div></div>
                                     <div></div>
