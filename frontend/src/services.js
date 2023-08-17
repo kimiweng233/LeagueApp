@@ -13,7 +13,9 @@ const createTournament = (data) => {
 };
 
 const createTeam = (data) => {
-    return http.post(`/createTeam/`, data);
+    return http.post(`/createTeam/`, data).then((response) => {
+        return response.data;
+    });
 };
 
 const getTeamData = (data) => {

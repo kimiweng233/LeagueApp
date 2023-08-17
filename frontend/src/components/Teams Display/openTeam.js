@@ -14,6 +14,7 @@ function TeamListing(props) {
         data: teamRequestStatus,
         isLoading: isTeamRequestStatusLoading,
         fetchStatus: teamRequestStatusFetchStatus,
+        isError: teamRequestStatusError,
     } = useQuery({
         queryKey: [
             "team-request-status",
@@ -32,24 +33,30 @@ function TeamListing(props) {
         isTeamRequestStatusLoading && teamRequestStatusFetchStatus !== "idle";
 
     const joinTeamButton = (props) => {
+        if (teamRequestStatusError) {
+            return <h3>Error with team joining</h3>;
+        }
         if (props.teamJoiningMode === "public") {
-            return (
-                <button
-                    className={`teamButton blueTextHalo ${
-                        props.tournamentJoinStatus
-                            ? "tournamentButtonDisabledHighlight"
-                            : "tournamentButtonHighlight"
-                    }`}
-                    disabled={props.tournamentJoinStatus}
-                    onClick={props.onClick}
-                >
-                    <div className="ButtonWrapper">
-                        {props.tournamentJoinStatus
-                            ? "Already Registered"
-                            : "Join"}
-                    </div>
-                </button>
-            );
+            if (teamRequestStatusLoading) {
+                return <LoadingAnimation />;
+            } else
+                return (
+                    <button
+                        className={`teamButton blueTextHalo ${
+                            props.tournamentJoinStatus
+                                ? "tournamentButtonDisabledHighlight"
+                                : "tournamentButtonHighlight"
+                        }`}
+                        disabled={props.tournamentJoinStatus}
+                        onClick={props.onClick}
+                    >
+                        <div className="ButtonWrapper">
+                            {props.tournamentJoinStatus
+                                ? "Already Registered"
+                                : "Join"}
+                        </div>
+                    </button>
+                );
         } else if (props.teamJoiningMode === "request-only") {
             if (teamRequestStatusLoading) {
                 return <LoadingAnimation />;
@@ -99,18 +106,21 @@ function TeamListing(props) {
         } else if (props.teamJoiningMode === "request-only") {
             return {
                 onClick: () => {
-                    services.requestJoin({
-                        summonerID: localStorage.getItem("summonerID"),
-                        teamID: props.id,
-                    });
-                    queryClient.setQueryData(
-                        [
-                            "team-request-status",
-                            props.id,
-                            localStorage.getItem("summonerID"),
-                        ],
-                        true
-                    );
+                    services
+                        .requestJoin({
+                            summonerID: localStorage.getItem("summonerID"),
+                            teamID: props.id,
+                        })
+                        .then((response) => {
+                            queryClient.setQueryData(
+                                [
+                                    "team-request-status",
+                                    props.id,
+                                    localStorage.getItem("summonerID"),
+                                ],
+                                true
+                            );
+                        });
                 },
                 teamJoiningMode: props.teamJoiningMode,
                 tournamentJoinStatus: props.tournamentJoinStatus,

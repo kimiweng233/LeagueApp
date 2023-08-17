@@ -1,9 +1,13 @@
 import React, { useState, useEffect } from "react";
+import { useMutation } from "@tanstack/react-query";
 import { useSearchParams, useNavigate } from "react-router-dom";
 
-import services from "../services";
 import { generateInviteCode } from "../utilities/inviteCode";
 import LoginGuard from "../components/Utilities/loginGuard";
+import CustomAlert from "../components/Utilities/customAlert";
+import LoadingScreen from "../components/Utilities/loadingScreen";
+
+import services from "../services";
 
 import "../assets/css/teamCreationForm.css";
 
@@ -11,13 +15,15 @@ function TeamForm() {
     const [teamName, setTeamName] = useState("");
     const [teamAcronym, setTeamAcronym] = useState("");
     const [teamJoiningMode, setTeamJoiningMode] = useState("public");
+    const [showAlert, setShowAlert] = useState(false);
+    const [alertMessage, setAlertMessage] = useState("");
+
     const [searchParams] = useSearchParams();
     const navigate = useNavigate();
 
-    const handleSubmit = (event) => {
-        event.preventDefault();
-        services
-            .createTeam({
+    const { mutate: createTeam, isLoading } = useMutation({
+        mutationFn: () =>
+            services.createTeam({
                 teamData: {
                     teamName: teamName,
                     teamAcronym: teamAcronym,
@@ -34,13 +40,19 @@ function TeamForm() {
                     members: [],
                 },
                 summonerID: localStorage.getItem("summonerID"),
-            })
-            .then((response) => {
-                navigate(`/team?teamID=${response.data["id"]}`);
-            })
-            .catch((error) => {
-                console.log(error);
-            });
+            }),
+        onSuccess: (data) => {
+            navigate(`/team?teamID=${data}`);
+        },
+        onError: (error) => {
+            setAlertMessage(error.response.data);
+            setShowAlert(true);
+        },
+    });
+
+    const handleSubmit = (event) => {
+        event.preventDefault();
+        createTeam();
     };
 
     useEffect(() => {}, [teamJoiningMode]);
@@ -62,6 +74,15 @@ function TeamForm() {
 
     return (
         <div className="formWrapper">
+            {isLoading && <LoadingScreen />}
+            {showAlert && (
+                <CustomAlert
+                    alertType="danger"
+                    setShowAlert={() => setShowAlert(false)}
+                >
+                    {alertMessage}
+                </CustomAlert>
+            )}
             <div className="tournamentFormTitleSectionWrapper">
                 <div className="tournamentFormSectionTitleDividerBarsBlueLeft" />
                 <h1 className="tournamentFormSectionTitleBlue">Create Team</h1>

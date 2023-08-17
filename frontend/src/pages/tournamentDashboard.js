@@ -3,11 +3,13 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useSearchParams } from "react-router-dom";
 
 import LoadingAnimation from "../components/Utilities/loadingAnimation";
+import CustomAlert from "../components/Utilities/customAlert";
 
 import services from "../services";
 
 import TournamentAdminBracket from "../components/Tournaments Display/tournamentAdminBracket";
 import EndTournamentCard from "../components/Tournaments Display/endTournamentCard";
+import NoDataFallback from "../components/Utilities/noDataFallback";
 
 import "../assets/css/dashboard.css";
 
@@ -19,10 +21,14 @@ function TournamentDashboard() {
     const [bracketWidth, setBracketWidth] = useState(0);
     const [bracketHeight, setBracketHeight] = useState(0);
 
+    const [showAlert, setShowAlert] = useState(false);
+    const [alertMessage, setAlertMessage] = useState("");
+
     const {
         data: tournamentData,
         isLoading: isTournamentDataLoading,
         fetchStatus: tournamentDataFetchStatus,
+        isError: tournamentDataError,
     } = useQuery({
         queryKey: ["tournament", searchParams.get("tournamentID")],
         queryFn: async () =>
@@ -54,6 +60,10 @@ function TournamentDashboard() {
                 }
             );
         },
+        onError: (error) => {
+            setAlertMessage(error.response.data);
+            setShowAlert(true);
+        },
     });
 
     if (tournamentDataLoading) {
@@ -64,12 +74,28 @@ function TournamentDashboard() {
         );
     }
 
+    if (tournamentDataError) {
+        return (
+            <NoDataFallback>
+                This tournament does not exist or has ended
+            </NoDataFallback>
+        );
+    }
+
     return (
         <div className="tournamentMenuWrapper">
             {showScreen && (
                 <div className="loadingScreen">
                     <EndTournamentCard setShowScreen={setShowScreen} />
                 </div>
+            )}
+            {showAlert && (
+                <CustomAlert
+                    alertType="danger"
+                    setShowAlert={() => setShowAlert(false)}
+                >
+                    {alertMessage}
+                </CustomAlert>
             )}
             <div className="tournamentFormTitleSectionWrapper">
                 <div className="tournamentFormSectionTitleDividerBarsBlueLeft" />

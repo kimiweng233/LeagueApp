@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+
 import { Tooltip } from "react-tooltip";
-import Alert from "react-bootstrap/Alert";
+import CustomAlert from "../components/Utilities/customAlert";
 
 import { AiOutlineCopy } from "react-icons/ai";
 import { FaListUl, FaSort } from "react-icons/fa";
@@ -14,6 +15,7 @@ import MemberCard from "../components/Teams Display/memberCard";
 import RequestMemberCard from "../components/Teams Display/requestMemberCard";
 import { compareRank } from "../utilities/rankConversions";
 import LoadingAnimation from "../components/Utilities/loadingAnimation";
+import ErrorText from "../components/Utilities/errorText";
 
 import "../assets/css/teamMenu.css";
 
@@ -21,12 +23,15 @@ function TeamMenu(props) {
     const [searchParams] = useSearchParams();
     const queryClient = useQueryClient();
 
+    const [showGoodAlert, setShowGoodAlert] = useState(false);
     const [showAlert, setShowAlert] = useState(false);
+    const [alertMessage, setAlertMessage] = useState("");
 
     const {
         data: teamData,
         isLoading: isTeamDataLoading,
         fetchStatus: teamDataFetchStatus,
+        isError: teamDataError,
     } = useQuery({
         queryKey: ["team-data", searchParams.get("teamID")],
         queryFn: async () =>
@@ -81,6 +86,10 @@ function TeamMenu(props) {
                 teamJoiningMode: newJoiningMode,
             });
         },
+        onError: (error) => {
+            setAlertMessage(error.response.data);
+            setShowAlert(true);
+        },
     });
 
     const { mutate: removeFromTeam } = useMutation({
@@ -91,6 +100,10 @@ function TeamMenu(props) {
             }),
         onSuccess: () => {
             navigate(`/teams?tournamentID=${teamData["tournament"]}`);
+        },
+        onError: (error) => {
+            setAlertMessage(error.response.data);
+            setShowAlert(true);
         },
     });
 
@@ -168,16 +181,31 @@ function TeamMenu(props) {
         setChangeSignal(!changeSignal);
     };
 
+    if (teamDataError) {
+        return (
+            <ErrorText>
+                Error loading teams data, please try refreshing!
+            </ErrorText>
+        );
+    }
+
     return (
         <div className="teamMenuWrapper">
-            {showAlert && (
-                <Alert
-                    variant="success"
-                    dismissible
-                    onClose={() => setShowAlert(false)}
+            {showGoodAlert && (
+                <CustomAlert
+                    alertType="success"
+                    setShowAlert={() => setShowGoodAlert(false)}
                 >
                     Team Invite Link Copied!
-                </Alert>
+                </CustomAlert>
+            )}
+            {showAlert && (
+                <CustomAlert
+                    alertType="danger"
+                    setShowAlert={() => setShowAlert(false)}
+                >
+                    {alertMessage}
+                </CustomAlert>
             )}
             <div className="tournamentFormTitleSectionWrapper">
                 <div className="tournamentFormSectionTitleDividerBarsBlueLeft" />
@@ -208,7 +236,7 @@ function TeamMenu(props) {
                                         <AiOutlineCopy
                                             className="teamMenuButton"
                                             onClick={() => {
-                                                setShowAlert(true);
+                                                setShowGoodAlert(true);
                                                 navigator.clipboard.writeText(
                                                     window.location.origin.toString() +
                                                         `/teamInvite?tournamentID=${teamData.tournament}&teamID=${teamData.id}`

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useSearchParams, useNavigate } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 
 import { FaListUl, FaSort } from "react-icons/fa";
@@ -29,8 +29,6 @@ function TeamMenuPublic(props) {
         retry: false,
     });
 
-    console.log(teamData);
-
     const teamDataLoading = isTeamDataLoading && teamDataFetchStatus !== "idle";
 
     const [globalCollapseStatus, setGlobalCollapseStatus] = useState(false);
@@ -40,8 +38,6 @@ function TeamMenuPublic(props) {
     const [teamMembers, setTeamMembers] = useState([]);
 
     const [changeSignal, setChangeSignal] = useState(false);
-
-    const navigate = useNavigate();
 
     useEffect(() => {
         if (!isTeamDataLoading) {

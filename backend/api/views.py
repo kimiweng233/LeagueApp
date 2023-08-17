@@ -31,13 +31,21 @@ def getTournamentsList(request):
 
 @api_view(["POST"])
 def createTournament(request):
-    serializer = TournamentSerializer(data=request.data)
-    if serializer.is_valid():
-        serializer.save()
-        return Response(serializer.data["id"], 200)
-    else:
-        print(serializer.errors)
-        return Response(serializer.errors)
+    try:
+        serializer = TournamentSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data["id"], 200)
+        else:
+            first_key, first_error = next(iter(serializer.errors.items()))
+            return Response(
+                first_error[0], status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+    except Exception as e:
+        return Response(
+            "Error creating tournament, please try again",
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+        )
 
 
 @api_view(["POST"])
@@ -60,9 +68,9 @@ def createTeam(request):
             for summoner in team.tournament.quickJoinQueue.all():
                 summoner.requestedTeams.add(team)
                 summoner.save()
-        return Response({"id": teamID}, 200)
+        return Response(teamID, 200)
     except Exception as e:
-        return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        return Response(str(e), status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 def createTeamFunc(tournamentID, teamData):
@@ -74,7 +82,8 @@ def createTeamFunc(tournamentID, teamData):
     if serializer.is_valid():
         team = serializer.save()
     else:
-        raise Exception(serializer.errors)
+        first_key, first_error = next(iter(serializer.errors.items()))
+        raise Exception(first_error[0])
     return team.id
 
 
@@ -296,11 +305,19 @@ def removeTeamRole(request):
 
 @api_view(["POST"])
 def requestJoin(request):
-    summoner = Summoner.objects.filter(summonerID=request.data["summonerID"]).first()
-    team = Team.objects.get(pk=request.data["teamID"])
-    summoner.requestedTeams.add(team)
-    summoner.save()
-    return Response(200)
+    try:
+        summoner = Summoner.objects.filter(
+            summonerID=request.data["summonerID"]
+        ).first()
+        team = Team.objects.get(pk=request.data["teamID"])
+        if team.teamJoiningMode != "public":
+            summoner.requestedTeams.add(team)
+            summoner.save()
+            return Response(200)
+        else:
+            return Response("Cannot send request because team is public")
+    except Exception as e:
+        return Response(str(e), status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 @api_view(["POST"])
@@ -314,49 +331,63 @@ def checkIfJoinedTournament(request):
 
 @api_view(["POST"])
 def removeFromTeam(request):
-    summoner = Summoner.objects.filter(summonerID=request.data["summonerID"]).first()
-    team = Team.objects.get(pk=request.data["teamID"])
-    summoner.registeredTeams.remove(team)
-    summoner.registeredTournaments.remove(team.tournament)
-    summoner.save()
-    if team.members.all().count() == 0:
-        team.delete()
-    else:
-        for role, summoner in team.rolesFilled.items():
-            if summoner == request.data["summonerID"]:
-                team.rolesFilled[role] = None
-        if (
-            team.tournament.quickJoinQueue.all().count() > 0
-            and team.teamJoiningMode == "public"
-        ):
-            joinTeamFunc(
-                team.tournament.quickJoinQueue.all().first().summonerID, team.id
-            )
-        team.save()
-    return Response(200)
+    try:
+        summoner = Summoner.objects.filter(
+            summonerID=request.data["summonerID"]
+        ).first()
+        team = Team.objects.get(pk=request.data["teamID"])
+        summoner.registeredTeams.remove(team)
+        summoner.registeredTournaments.remove(team.tournament)
+        summoner.save()
+        if team.members.all().count() == 0:
+            team.delete()
+        else:
+            for role, summoner in team.rolesFilled.items():
+                if summoner == request.data["summonerID"]:
+                    team.rolesFilled[role] = None
+            if (
+                team.tournament.quickJoinQueue.all().count() > 0
+                and team.teamJoiningMode == "public"
+            ):
+                joinTeamFunc(
+                    team.tournament.quickJoinQueue.all().first().summonerID, team.id
+                )
+            team.save()
+        return Response(200)
+    except Exception as e:
+        return Response(
+            "Error leaving team!",
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+        )
 
 
 @api_view(["POST"])
 def changeTeamJoiningMode(request):
-    team = Team.objects.get(pk=request.data["teamID"])
-    team.teamJoiningMode = request.data["newJoiningMode"]
-    if request.data["newJoiningMode"] == "public":
-        for summoner in team.requests.all():
-            if team.members.all().count() < 5:
-                joinTeamFunc(summoner.summonerID, team.id)
-            summoner.requestedTeams.remove(team)
-        for summoner in team.tournament.quickJoinQueue.all():
-            if team.members.all().count() < 5:
-                joinTeamFunc(summoner.summonerID, team.id)
-    elif request.data["newJoiningMode"] == "request-only":
-        for summoner in team.tournament.quickJoinQueue.all():
-            summoner.requestedTeams.add(team)
-            summoner.save()
-    elif request.data["newJoiningMode"] == "invite-only":
-        for summoner in team.requests.all():
-            summoner.requestedTeams.remove(team)
-    team.save()
-    return Response(team.teamJoiningMode)
+    try:
+        team = Team.objects.get(pk=request.data["teamID"])
+        team.teamJoiningMode = request.data["newJoiningMode"]
+        if request.data["newJoiningMode"] == "public":
+            for summoner in team.requests.all():
+                if team.members.all().count() < 5:
+                    joinTeamFunc(summoner.summonerID, team.id)
+                summoner.requestedTeams.remove(team)
+            for summoner in team.tournament.quickJoinQueue.all():
+                if team.members.all().count() < 5:
+                    joinTeamFunc(summoner.summonerID, team.id)
+        elif request.data["newJoiningMode"] == "request-only":
+            for summoner in team.tournament.quickJoinQueue.all():
+                summoner.requestedTeams.add(team)
+                summoner.save()
+        elif request.data["newJoiningMode"] == "invite-only":
+            for summoner in team.requests.all():
+                summoner.requestedTeams.remove(team)
+        team.save()
+        return Response(team.teamJoiningMode)
+    except Exception as e:
+        return Response(
+            "Error changing team joining mode!",
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+        )
 
 
 @api_view(["POST"])
@@ -392,63 +423,65 @@ def getTeamsWithVacancy(request):
 
 @api_view(["POST"])
 def quickJoin(request):
-    summoner = Summoner.objects.filter(summonerID=request.data["summonerID"]).first()
-    tournament = Tournament.objects.get(pk=request.data["tournamentID"])
-    openPublicTeams = (
-        tournament.teams.all()
-        .annotate(membersCount=Count("members"))
-        .filter(Q(membersCount__lt=5) & Q(teamJoiningMode__exact="public"))
-        .order_by("-membersCount")
-    )
-    if openPublicTeams.count() > 0:
-        joinTeamFunc(request.data["summonerID"], openPublicTeams.first().id)
-        return Response(
-            {"message": "Joined Team", "id": openPublicTeams.first().id}, 200
+    try:
+        summoner = Summoner.objects.filter(
+            summonerID=request.data["summonerID"]
+        ).first()
+        tournament = Tournament.objects.get(pk=request.data["tournamentID"])
+        openPublicTeams = (
+            tournament.teams.all()
+            .annotate(membersCount=Count("members"))
+            .filter(Q(membersCount__lt=5) & Q(teamJoiningMode__exact="public"))
+            .order_by("-membersCount")
         )
-    else:
-        if (
-            tournament.quickJoinQueue.count() > 4
-            and tournament.teams.count() < tournament.teamsCap
-        ):
-            teamID = createTeamFunc(
-                request.data["tournamentID"],
-                {
-                    "teamName": "Team " + str(tournament.teams.count()),
-                    "teamAcronym": "T" + str(tournament.teams.count()),
-                    "tournament": request.data["tournamentID"],
-                    "teamJoiningMode": "public",
-                    "rolesFilled": {
-                        "Top": None,
-                        "Jungle": None,
-                        "Mid": None,
-                        "Bot": None,
-                        "Support": None,
-                    },
-                    "inviteCode": generateInviteCode(6),
-                    "members": [],
-                },
+        if openPublicTeams.count() > 0:
+            joinTeamFunc(request.data["summonerID"], openPublicTeams.first().id)
+            return Response(
+                {"message": "Joined Team", "id": openPublicTeams.first().id}, 200
             )
-            for waitingSummoner in tournament.quickJoinQueue.all()[:4]:
-                try:
-                    joinTeamFunc(waitingSummoner.summonerID, teamID)
-                except Exception as e:
-                    print(e)
-            joinTeamFunc(summoner.summonerID, teamID)
-            return Response({"message": "Created Team", "id": teamID}, 200)
         else:
-            tournament.quickJoinQueue.add(summoner)
-            openPrivateTeams = (
-                tournament.teams.all()
-                .annotate(membersCount=Count("members"))
-                .filter(
-                    Q(membersCount__lt=5) & Q(teamJoiningMode__exact="request-only")
+            if (
+                tournament.quickJoinQueue.count() > 4
+                and tournament.teams.count() < tournament.teamsCap
+            ):
+                teamID = createTeamFunc(
+                    request.data["tournamentID"],
+                    {
+                        "teamName": "Team " + str(tournament.teams.count()),
+                        "teamAcronym": "T" + str(tournament.teams.count()),
+                        "tournament": request.data["tournamentID"],
+                        "teamJoiningMode": "public",
+                        "rolesFilled": {
+                            "Top": None,
+                            "Jungle": None,
+                            "Mid": None,
+                            "Bot": None,
+                            "Support": None,
+                        },
+                        "inviteCode": generateInviteCode(6),
+                        "members": [],
+                    },
                 )
-                .order_by("-membersCount")
-            )
-            for privateTeam in openPrivateTeams:
-                summoner.requestedTeams.add(privateTeam)
-                summoner.save()
-            return Response({"message": "Sent Requests"}, 200)
+                for waitingSummoner in tournament.quickJoinQueue.all()[:4]:
+                    joinTeamFunc(waitingSummoner.summonerID, teamID)
+                joinTeamFunc(summoner.summonerID, teamID)
+                return Response({"message": "Created Team", "id": teamID}, 200)
+            else:
+                tournament.quickJoinQueue.add(summoner)
+                openPrivateTeams = (
+                    tournament.teams.all()
+                    .annotate(membersCount=Count("members"))
+                    .filter(
+                        Q(membersCount__lt=5) & Q(teamJoiningMode__exact="request-only")
+                    )
+                    .order_by("-membersCount")
+                )
+                for privateTeam in openPrivateTeams:
+                    summoner.requestedTeams.add(privateTeam)
+                    summoner.save()
+                return Response({"message": "Sent Requests"}, 200)
+    except Exception as e:
+        return Response(str(e), status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 def generateInviteCode(length):
@@ -656,7 +689,6 @@ def endTournament(request):
 @api_view(["POST"])
 def updateTournamentTeams(request):
     try:
-        raise APIException("fuck!")
         tournament = Tournament.objects.get(pk=request.data["tournamentID"])
         for teamData in request.data["teamData"]:
             newTeam = Team(

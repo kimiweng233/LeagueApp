@@ -1,14 +1,17 @@
 import React, { useState } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
 import services from "../services";
 
-import Alert from "react-bootstrap/Alert";
 import { Tooltip } from "react-tooltip";
+
 import OpenTeam from "../components/Teams Display/openTeam";
 import LoginGuard from "../components/Utilities/loginGuard";
 import LoadingAnimation from "../components/Utilities/loadingAnimation";
+import LoadingScreen from "../components/Utilities/loadingScreen";
+import ErrorText from "../components/Utilities/errorText";
+import CustomAlert from "../components/Utilities/customAlert";
 
 import { GrPowerReset } from "react-icons/gr";
 
@@ -36,12 +39,20 @@ function TeamsList() {
         "Support",
     ]);
     const [inviteCode, setInviteCode] = useState("");
-    const [showAlert, setShowAlert] = useState(false);
     const [inQueue, setInQueue] = useState(false);
+
+    const [showGoodAlert, setShowGoodAlert] = useState(false);
+    const [showAlert, setShowAlert] = useState(false);
+    const [alertMessage, setAlertMessage] = useState("");
+
     const [searchParams] = useSearchParams();
     const navigate = useNavigate();
 
-    const { data: teamsList, isLoading: isTeamsListLoading } = useQuery({
+    const {
+        data: teamsList,
+        isLoading: isTeamsListLoading,
+        isError: teamsListError,
+    } = useQuery({
         queryKey: ["teams-list", searchParams.get("tournamentID")],
         queryFn: async () =>
             services.getTeamsWithVacancy({
@@ -51,28 +62,32 @@ function TeamsList() {
         retry: false,
     });
 
-    const { data: tournamentData, isLoading: isTournamentDataLoading } =
-        useQuery({
-            queryKey: ["tournament", searchParams.get("tournamentID")],
-            queryFn: async () =>
-                services.getTournamentData({
-                    tournamentID: searchParams.get("tournamentID"),
-                    summonerID: localStorage.getItem("summonerID"),
-                }),
-            onSuccess: (tournamentData) => {
-                setInQueue(
-                    tournamentData.quickJoinQueue.some(
-                        (summonerID) =>
-                            summonerID == localStorage.getItem("summonerID")
-                    )
-                );
-            },
-            retry: false,
-        });
+    const {
+        data: tournamentData,
+        isLoading: isTournamentDataLoading,
+        isError: tournamentDataError,
+    } = useQuery({
+        queryKey: ["tournament", searchParams.get("tournamentID")],
+        queryFn: async () =>
+            services.getTournamentData({
+                tournamentID: searchParams.get("tournamentID"),
+                summonerID: localStorage.getItem("summonerID"),
+            }),
+        onSuccess: (tournamentData) => {
+            setInQueue(
+                tournamentData.quickJoinQueue.some(
+                    (summonerID) =>
+                        summonerID == localStorage.getItem("summonerID")
+                )
+            );
+        },
+        retry: false,
+    });
 
     const {
         data: tournamentJoinStatus,
         isLoading: isTournamentJoinStatusLoading,
+        isError: tournamentJoinStatusError,
     } = useQuery({
         queryKey: ["tournament-join-status", searchParams.get("tournamentID")],
         queryFn: async () =>
@@ -93,33 +108,41 @@ function TeamsList() {
         setRoleQueries(updatedRoles);
     };
 
-    const quickJoin = () => {
-        if (!inQueue && !tournamentJoinStatus) {
-            services
-                .quickJoin({
-                    summonerID: localStorage.getItem("summonerID"),
-                    tournamentID: searchParams.get("tournamentID"),
-                })
-                .then((response) => {
-                    if (response["message"] == "Joined Team") {
-                        navigate(`/team?teamID=${response["id"]}`);
-                    } else if (response["message"] == "Created Team") {
-                        navigate(`/team?teamID=${response["id"]}`);
-                    } else if (response["message"] == "Sent Requests") {
-                        setShowAlert(true);
-                        queryClient.setQueryData(
-                            ["tournament", searchParams.get("tournamentID")],
-                            {
-                                ...tournamentData,
-                                quickJoinQueue: [
-                                    ...tournamentData.quickJoinQueue,
-                                    localStorage.getItem("summonerID"),
-                                ],
-                            }
-                        );
-                        setInQueue(true);
+    const { mutate: quickJoin, isLoading: quickJoinLoading } = useMutation({
+        mutationFn: () =>
+            services.quickJoin({
+                summonerID: localStorage.getItem("summonerID"),
+                tournamentID: searchParams.get("tournamentID"),
+            }),
+        onSuccess: (data) => {
+            if (data["message"] == "Joined Team") {
+                navigate(`/team?teamID=${data["id"]}`);
+            } else if (data["message"] == "Created Team") {
+                navigate(`/team?teamID=${data["id"]}`);
+            } else if (data["message"] == "Sent Requests") {
+                setShowAlert(true);
+                queryClient.setQueryData(
+                    ["tournament", searchParams.get("tournamentID")],
+                    {
+                        ...tournamentData,
+                        quickJoinQueue: [
+                            ...tournamentData.quickJoinQueue,
+                            localStorage.getItem("summonerID"),
+                        ],
                     }
-                });
+                );
+                setInQueue(true);
+            }
+        },
+        onError: (error) => {
+            setAlertMessage(error.response.data);
+            setShowAlert(true);
+        },
+    });
+
+    const handleQuickJoin = () => {
+        if (!inQueue && !tournamentJoinStatus) {
+            quickJoin();
         }
     };
 
@@ -155,17 +178,33 @@ function TeamsList() {
         return false;
     });
 
+    if (teamsListError || tournamentDataError || tournamentJoinStatusError) {
+        return (
+            <ErrorText>
+                Error loading teams data, please try refreshing!
+            </ErrorText>
+        );
+    }
+
     return (
         <div className="teamsListWrapper">
-            {showAlert && (
-                <Alert
-                    variant="success"
-                    dismissible
-                    onClose={() => setShowAlert(false)}
+            {quickJoinLoading && <LoadingScreen />}
+            {showGoodAlert && (
+                <CustomAlert
+                    alertType="success"
+                    setShowAlert={() => setShowGoodAlert(false)}
                 >
                     You are on the queue and will be joined as soon as a team
                     opens up!
-                </Alert>
+                </CustomAlert>
+            )}
+            {showAlert && (
+                <CustomAlert
+                    alertType="danger"
+                    setShowAlert={() => setShowAlert(false)}
+                >
+                    {alertMessage}
+                </CustomAlert>
             )}
             <div className="tournamentFormTitleSectionWrapper">
                 <div className="tournamentFormSectionTitleDividerBarsBlueLeft" />
@@ -250,7 +289,7 @@ function TeamsList() {
                                     ? "tournamentButtonDisabledHighlight"
                                     : "submitButtonUnlocked"
                             } quickJoinButton blueTextHalo`}
-                            onClick={quickJoin}
+                            onClick={handleQuickJoin}
                             data-tooltip-id="quickJoinTooltip"
                             data-tooltip-content={`${
                                 tournamentJoinStatus
@@ -304,7 +343,9 @@ function TeamsList() {
                     </div>
                 </div>
             </div>
-            {isTeamsListLoading || isTournamentJoinStatusLoading ? (
+            {isTeamsListLoading ||
+            isTournamentJoinStatusLoading ||
+            isTournamentDataLoading ? (
                 <LoadingAnimation />
             ) : (
                 <div className="openTeamsWrapper">

@@ -1,4 +1,3 @@
-import React, { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 
@@ -6,7 +5,7 @@ import services from "../services";
 
 import LoginGuard from "../components/Utilities/loginGuard";
 import LoadingAnimation from "../components/Utilities/loadingAnimation";
-
+import NoDataFallback from "../components/Utilities/noDataFallback";
 import CountdownClock from "../components/Utilities/countDownClock";
 
 import "../assets/css/joinedTeams.css";
@@ -18,6 +17,7 @@ function JoinedTeams() {
         data: joinedTeams,
         isLoading: isJoinedTeamsLoading,
         fetchStatus: joinedTeamsFetchStatus,
+        isError: joinedTeamsError,
     } = useQuery({
         queryKey: ["joined-teams", localStorage.getItem("summonerID")],
         queryFn: async () =>
@@ -29,6 +29,14 @@ function JoinedTeams() {
 
     const joinedTeamsLoading =
         isJoinedTeamsLoading && joinedTeamsFetchStatus !== "idle";
+
+    if (joinedTeamsError) {
+        return (
+            <NoDataFallback>
+                Error fetching joined teams, please try refreshing!
+            </NoDataFallback>
+        );
+    }
 
     return (
         <div>

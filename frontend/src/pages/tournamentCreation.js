@@ -1,10 +1,13 @@
 import React, { useState } from "react";
+import { useMutation } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 
-import services from "../services";
 import LoginGuard from "../components/Utilities/loginGuard";
+import CustomAlert from "../components/Utilities/customAlert";
 
 import { BsClock } from "react-icons/bs";
+
+import services from "../services";
 
 import "../assets/css/tournamentCreationForm.css";
 
@@ -17,12 +20,15 @@ function TournamentForm() {
     const [registrationFee, setRegistrationFee] = useState("");
     const [liveBroadcastLink, setLiveBroadcastLink] = useState("");
     const [startTime, setStartTime] = useState("");
+
+    const [showAlert, setShowAlert] = useState(false);
+    const [alertMessage, setAlertMessage] = useState("");
+
     const navigate = useNavigate();
 
-    const handleSubmit = (event) => {
-        event.preventDefault();
-        services
-            .createTournament({
+    const { mutate: createTournament } = useMutation({
+        mutationFn: (param) =>
+            services.createTournament({
                 tournamentName: tournamentName,
                 tournamentFormat: tournamentFormat,
                 description: description,
@@ -32,13 +38,19 @@ function TournamentForm() {
                 liveLink: liveBroadcastLink,
                 startTime: startTime,
                 teams: [],
-            })
-            .then((response) => {
-                navigate(`/tournamentPlanning?tournamentID=${response}`);
-            })
-            .catch((error) => {
-                console.log(error);
-            });
+            }),
+        onSuccess: (data) => {
+            navigate(`/tournamentPlanning?tournamentID=${data}`);
+        },
+        onError: (error) => {
+            setAlertMessage(error.response.data);
+            setShowAlert(true);
+        },
+    });
+
+    const handleCreateTournament = (event) => {
+        event.preventDefault();
+        createTournament();
     };
 
     const isFormValid =
@@ -46,6 +58,14 @@ function TournamentForm() {
 
     return (
         <div className="formWrapper">
+            {showAlert && (
+                <CustomAlert
+                    alertType="danger"
+                    setShowAlert={() => setShowAlert(false)}
+                >
+                    {alertMessage}
+                </CustomAlert>
+            )}
             <div className="tournamentFormTitleSectionWrapper">
                 <div className="tournamentFormSectionTitleDividerBarsBlueLeft" />
                 <h1 className="tournamentFormSectionTitleBlue">
@@ -53,7 +73,10 @@ function TournamentForm() {
                 </h1>
                 <div className="tournamentFormSectionTitleDividerBarsBlueRight" />
             </div>
-            <form onSubmit={handleSubmit} className="tournamentForm">
+            <form
+                onSubmit={(event) => handleCreateTournament(event)}
+                className="tournamentForm"
+            >
                 <div className="inputRowWrapper formTitleFieldWrapper">
                     <div className="labelInputWrapper">
                         <h2 className="tournamentNameTitle">

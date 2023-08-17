@@ -6,6 +6,7 @@ import TournamentBracket from "../components/Tournaments Display/tournamentBrack
 import TournamentDescription from "../components/Tournaments Display/tournamentDescription";
 import LoginGuard from "../components/Utilities/loginGuard";
 import LoadingAnimation from "../components/Utilities/loadingAnimation";
+import NoDataFallback from "../components/Utilities/noDataFallback";
 
 import services from "../services";
 
@@ -36,11 +37,9 @@ function TournamentMenu() {
 
     if (tournamentDataError) {
         return (
-            <div className="tournamentMenuWrapper">
-                <h1 className="fallbackMessage">
-                    This tournament does not exist or has ended
-                </h1>
-            </div>
+            <NoDataFallback>
+                This tournament does not exist or has ended
+            </NoDataFallback>
         );
     }
 

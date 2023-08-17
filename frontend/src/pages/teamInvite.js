@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { useSearchParams } from "react-router-dom";
 
 import LoginGuard from "../components/Utilities/loginGuard";
+import CustomAlert from "../components/Utilities/customAlert";
 
 import services from "../services";
 
@@ -12,6 +13,9 @@ import LoadingAnimation from "../components/Utilities/loadingAnimation";
 function TeamInvite() {
     const [searchParams] = useSearchParams();
     const navigate = useNavigate();
+
+    const [showAlert, setShowAlert] = useState(false);
+    const [alertMessage, setAlertMessage] = useState("");
 
     const {
         data: tournamentJoinStatus,
@@ -46,8 +50,6 @@ function TeamInvite() {
         retry: false,
     });
 
-    console.log(teamData);
-
     const teamDataLoading = isTeamDataLoading && teamDataFetchStatus !== "idle";
 
     const { mutate: approveJoin } = useMutation({
@@ -60,7 +62,8 @@ function TeamInvite() {
             navigate(`/team?teamID=${searchParams.get("teamID")}`);
         },
         onError: (error) => {
-            console.log(error);
+            setAlertMessage(error.response.data);
+            setShowAlert(true);
         },
     });
 
@@ -85,6 +88,14 @@ function TeamInvite() {
 
     return (
         <div className="formWrapper">
+            {showAlert && (
+                <CustomAlert
+                    alertType="danger"
+                    setShowAlert={() => setShowAlert(false)}
+                >
+                    {alertMessage}
+                </CustomAlert>
+            )}
             <div className="loginForm">
                 {!tournamentJoinStatusLoading && !teamDataLoading ? (
                     <div className="loginInputWrapper">

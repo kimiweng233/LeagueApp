@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from .models import Tournament, Team, Summoner
+from django.db.models import Q
 
 
 class JSONSerializerField(serializers.Field):
@@ -44,6 +45,15 @@ class TeamSerializer(serializers.ModelSerializer):
             "inviteCode",
             "members",
         )
+
+    def validate(self, data):
+        tournament = data["tournament"]
+        tournamentEntry = Tournament.objects.get(id=tournament)
+        condition = Q(teamName=data["teamName"]) | Q(teamAcronym=data["teamAcronym"])
+        if tournamentEntry.teams.all().filter(condition).exists():
+            raise serializers.ValidationError("Team name and/or acronym already exists")
+        data = super().validate(data)
+        return data
 
     def create(self, validated_data):
         tournament = validated_data.pop("tournament")

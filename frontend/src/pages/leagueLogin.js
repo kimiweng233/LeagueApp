@@ -3,16 +3,17 @@ import { useMutation } from "@tanstack/react-query";
 import { useLocation, useNavigate } from "react-router-dom";
 
 import LoadingScreen from "../components/Utilities/loadingScreen";
+import CustomAlert from "../components/Utilities/customAlert";
 
 import services from "../services";
-
-import Alert from "react-bootstrap/Alert";
 
 import "../assets/css/loginForm.css";
 
 function LeagueLogin() {
-    const [showAlert, setShowAlert] = useState(false);
     const [summonerID, setSummonerID] = useState("");
+    const [showAlert, setShowAlert] = useState(false);
+    const [alertMessage, setAlertMessage] = useState("");
+
     const location = useLocation();
     const navigate = useNavigate();
 
@@ -27,7 +28,7 @@ function LeagueLogin() {
         mutate();
     };
 
-    const { mutate, isLoading, error } = useMutation({
+    const { mutate, isLoading } = useMutation({
         mutationFn: () => services.summonerLogin({ summonerID: summonerID }),
         onSuccess: (summonerData) => {
             localStorage.setItem("summonerID", summonerID);
@@ -35,6 +36,7 @@ function LeagueLogin() {
             navigate(location?.state?.prevUrl ? location?.state?.prevUrl : "/");
         },
         onError: (error) => {
+            setAlertMessage(error.response.data);
             setShowAlert(true);
         },
     });
@@ -47,13 +49,12 @@ function LeagueLogin() {
         <div className="formWrapper">
             {isLoading && <LoadingScreen />}
             {showAlert && (
-                <Alert
-                    variant="success"
-                    dismissible
-                    onClose={() => setShowAlert(false)}
+                <CustomAlert
+                    alertType="danger"
+                    setShowAlert={() => setShowAlert(false)}
                 >
-                    {error.response.data}
-                </Alert>
+                    {alertMessage}
+                </CustomAlert>
             )}
             <div className="tournamentFormTitleSectionWrapper">
                 <div className="tournamentFormSectionTitleDividerBarsBlueLeft" />

@@ -1,20 +1,19 @@
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
-import { useNavigate } from "react-router-dom";
 
 import LoadingAnimation from "../components/Utilities/loadingAnimation";
+import NoDataFallback from "../components/Utilities/noDataFallback";
 
 import services from "../services";
 
 import "../assets/css/dashboard.css";
 
 const Dashboard = () => {
-    const navigate = useNavigate();
-
     const {
         data: tournamentsList,
         isLoading: isTournamentsLoading,
         fetchStatus: tournamentsFetchStatus,
+        isError: tournamentsListError,
     } = useQuery({
         queryKey: ["tournaments-list"],
         queryFn: async () => services.getTournamentsList(),
@@ -23,6 +22,14 @@ const Dashboard = () => {
 
     const tournamentsLoading =
         isTournamentsLoading && tournamentsFetchStatus !== "idle";
+
+    if (tournamentsListError) {
+        return (
+            <NoDataFallback>
+                Error fetching tournaments data, please try refreshing!
+            </NoDataFallback>
+        );
+    }
 
     if (tournamentsLoading) {
         return <LoadingAnimation />;
