@@ -4,6 +4,8 @@ import { useMutation } from "@tanstack/react-query";
 
 import { RxCross2 } from "react-icons/rx";
 
+import LoadingScreen from "../Utilities/loadingScreen";
+
 import services from "../../services";
 
 import "../../assets/css/dashboard.css";
@@ -13,18 +15,20 @@ function EndTournamentCard(props) {
     const navigate = useNavigate();
     const setShowScreen = props.setShowScreen;
 
-    const { mutate: endTournament } = useMutation({
-        mutationFn: () =>
-            services.endTournament({
-                tournamentID: searchParams.get("tournamentID"),
-            }),
-        onSuccess: () => {
-            navigate("/dashboard");
-        },
-    });
+    const { mutate: endTournament, isLoading: endTournamentLoading } =
+        useMutation({
+            mutationFn: () =>
+                services.endTournament({
+                    tournamentID: searchParams.get("tournamentID"),
+                }),
+            onSuccess: () => {
+                navigate("/dashboard");
+            },
+        });
 
     return (
         <div className="endTournamentCard">
+            {endTournamentLoading && <LoadingScreen />}
             <RxCross2
                 className="endTournamentCardExit"
                 onClick={() => setShowScreen(false)}

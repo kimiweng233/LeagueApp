@@ -12,7 +12,7 @@ import { getAverageRank } from "../../utilities/rankConversions";
 
 import TeamMembersTable from "./teamMembersTable";
 
-const TeamCard = (ButtonsList) => {
+const TeamCard = React.forwardRef((ButtonsList, ref) => {
     function WrappedComponent(props) {
         const [avgTier, setAvgTier] = useState("");
         const [avgRank, setAvgRank] = useState("");
@@ -31,7 +31,7 @@ const TeamCard = (ButtonsList) => {
         }, []);
 
         return (
-            <div className="teamCardWrapper">
+            <div className="teamCardWrapper" ref={ref}>
                 <div className="teamStatsWrapper">
                     <div className="teamStats">
                         <div className="cardTitleWrapper">
@@ -119,6 +119,6 @@ const TeamCard = (ButtonsList) => {
         );
     }
     return WrappedComponent;
-};
+});
 
 export default TeamCard;

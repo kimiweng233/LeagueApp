@@ -1,36 +1,9 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useSearchParams } from "react-router-dom";
-
-import services from "../../services";
-
 import "../../assets/css/tournamentBracket.css";
 
 function TournamentAdminBracketTeam(props) {
-    const [searchParams] = useSearchParams();
-    const queryClient = useQueryClient();
     const team = props.team;
     const enable = props.enable;
-
-    const { mutate: updateScore } = useMutation({
-        mutationFn: (score) =>
-            services.updateBracketScore({
-                tournamentID: searchParams.get("tournamentID"),
-                id: team["id"],
-                newScore: score,
-            }),
-        onSuccess: (newScore) => {
-            queryClient.setQueryData(
-                ["tournament", searchParams.get("tournamentID")],
-                {
-                    ...queryClient.getQueryData([
-                        "tournament",
-                        searchParams.get("tournamentID"),
-                    ]),
-                    bracket: newScore,
-                }
-            );
-        },
-    });
+    const updateScore = props.updateScore;
 
     return (
         <div className="tournamentBracketTeamWrapper">
@@ -65,7 +38,12 @@ function TournamentAdminBracketTeam(props) {
             {enable && (
                 <div
                     className="tournamentAdminBracketButton tournamentAdminBracketPlusButton"
-                    onClick={() => updateScore(team["Score"] + 1)}
+                    onClick={() =>
+                        updateScore({
+                            id: team["id"],
+                            score: team["Score"] + 1,
+                        })
+                    }
                 >
                     <p className="tournamentAdminBracketTeamText">+</p>
                 </div>
@@ -73,7 +51,12 @@ function TournamentAdminBracketTeam(props) {
             {enable && (
                 <div
                     className="tournamentAdminBracketButton tournamentAdminBracketMinusButton"
-                    onClick={() => updateScore(team["Score"] - 1)}
+                    onClick={() =>
+                        updateScore({
+                            id: team["id"],
+                            score: team["Score"] - 1,
+                        })
+                    }
                 >
                     <p className="tournamentAdminBracketTeamText tournamentAdminBracketTeamMinusText">
                         -

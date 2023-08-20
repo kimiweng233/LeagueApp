@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 
 import LoginGuard from "../components/Utilities/loginGuard";
 import CustomAlert from "../components/Utilities/customAlert";
+import LoadingScreen from "../components/Utilities/loadingScreen";
 
 import { BsClock } from "react-icons/bs";
 
@@ -26,7 +27,7 @@ function TournamentForm() {
 
     const navigate = useNavigate();
 
-    const { mutate: createTournament } = useMutation({
+    const { mutate: createTournament, isLoading } = useMutation({
         mutationFn: (param) =>
             services.createTournament({
                 tournamentName: tournamentName,
@@ -58,6 +59,7 @@ function TournamentForm() {
 
     return (
         <div className="formWrapper">
+            {isLoading && <LoadingScreen />}
             {showAlert && (
                 <CustomAlert
                     alertType="danger"

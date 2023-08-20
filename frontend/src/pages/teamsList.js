@@ -1,12 +1,17 @@
 import React, { useState } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import {
+    useQuery,
+    useMutation,
+    useQueryClient,
+    useInfiniteQuery,
+} from "@tanstack/react-query";
 
 import services from "../services";
 
 import { Tooltip } from "react-tooltip";
 
-import OpenTeam from "../components/Teams Display/openTeam";
+import TeamCardTemp from "../components/Teams Display/openTeamTemp";
 import LoginGuard from "../components/Utilities/loginGuard";
 import LoadingAnimation from "../components/Utilities/loadingAnimation";
 import LoadingScreen from "../components/Utilities/loadingScreen";
@@ -45,22 +50,29 @@ function TeamsList() {
     const [showAlert, setShowAlert] = useState(false);
     const [alertMessage, setAlertMessage] = useState("");
 
+    const NUM_TEAMS_PER_PAGE = 5;
+
     const [searchParams] = useSearchParams();
     const navigate = useNavigate();
 
-    const {
-        data: teamsList,
-        isLoading: isTeamsListLoading,
-        isError: teamsListError,
-    } = useQuery({
-        queryKey: ["teams-list", searchParams.get("tournamentID")],
-        queryFn: async () =>
-            services.getTeamsWithVacancy({
-                tournamentID: searchParams.get("tournamentID"),
-                desiredRoles: roleQueries,
-            }),
-        retry: false,
-    });
+    const { data, hasNextPage, fetchNextPage, isFetchingNextPage, isLoading } =
+        useInfiniteQuery(
+            ["teams-list", searchParams.get("tournamentID")],
+            ({ pageParam = 1 }) =>
+                services.getTeamsWithVacancyPaginated({
+                    tournamentID: searchParams.get("tournamentID"),
+                    desiredRoles: roleQueries,
+                    perPage: NUM_TEAMS_PER_PAGE,
+                    pageNum: pageParam,
+                }),
+            {
+                getNextPageParam: (lastPage, allPages) => {
+                    return lastPage?.isLastPage
+                        ? undefined
+                        : allPages.length + 1;
+                },
+            }
+        );
 
     const {
         data: tournamentData,
@@ -161,24 +173,25 @@ function TeamsList() {
         setRoleQueries(["Top", "Jungle", "Mid", "Bot", "Support"]);
     };
 
-    const filteredTeamsList = teamsList?.filter((team) => {
-        if (team.inviteCode == inviteCode) {
-            return true;
-        }
-        if (team.teamJoiningMode == "invite-only") {
-            return false;
-        }
-        if (inviteCode == "") {
-            for (let i = 0; i < roleQueries.length; i++) {
-                if (team.rolesFilled[roleQueries[i]] === null) {
-                    return true;
+    const filteredTeamsList = data?.pages.flatMap((page) =>
+        page.teams.filter((team) => {
+            if (team.inviteCode == inviteCode) {
+                return true;
+            }
+            if (inviteCode == "") {
+                for (let i = 0; i < roleQueries.length; i++) {
+                    if (team.rolesFilled[roleQueries[i]] === null) {
+                        return true;
+                    }
                 }
             }
-        }
-        return false;
-    });
+            return false;
+        })
+    );
 
-    if (teamsListError || tournamentDataError || tournamentJoinStatusError) {
+    console.log(filteredTeamsList);
+
+    if (tournamentDataError || tournamentJoinStatusError) {
         return (
             <ErrorText>
                 Error loading teams data, please try refreshing!
@@ -343,24 +356,30 @@ function TeamsList() {
                     </div>
                 </div>
             </div>
-            {isTeamsListLoading ||
-            isTournamentJoinStatusLoading ||
-            isTournamentDataLoading ? (
+            {isTournamentJoinStatusLoading ||
+            isTournamentDataLoading ||
+            isLoading ? (
                 <LoadingAnimation />
             ) : (
                 <div className="openTeamsWrapper">
-                    {filteredTeamsList?.length > 0 ? (
-                        filteredTeamsList?.map((team, i) => {
-                            return (
-                                <OpenTeam
-                                    key={i}
-                                    {...team}
-                                    tournamentJoinStatus={tournamentJoinStatus}
-                                />
-                            );
-                        })
-                    ) : (
-                        <h1 className="NoMatchesSign">No Matches Found QAQ</h1>
+                    {filteredTeamsList.map((team, i) => (
+                        <TeamCardTemp
+                            key={i}
+                            {...team}
+                            tournamentJoinStatus={tournamentJoinStatus}
+                        />
+                    ))}
+                    {hasNextPage && (
+                        <button
+                            onClick={fetchNextPage}
+                            className="teamsListGetNextButton"
+                        >
+                            {isFetchingNextPage ? (
+                                <LoadingAnimation />
+                            ) : (
+                                "Load More Teams"
+                            )}
+                        </button>
                     )}
                 </div>
             )}

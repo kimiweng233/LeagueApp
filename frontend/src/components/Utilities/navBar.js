@@ -12,7 +12,10 @@ import { MdOutlineRefresh } from "react-icons/md";
 
 import LoadingScreen from "./loadingScreen";
 
+import { DISCORD_INVITATION_LINK } from "../../constants";
+
 import services from "../../services";
+
 import "../../assets/css/navbar.css";
 
 const AppNavbar = () => {
@@ -52,6 +55,9 @@ const AppNavbar = () => {
                             alt="Server Icon"
                             className="rounded-circle"
                             style={{ width: "60px", marginRight: "10px" }}
+                            onClick={() => {
+                                window.open(DISCORD_INVITATION_LINK, "_blank");
+                            }}
                         />
                     </Navbar.Brand>
                     <Navbar.Toggle aria-controls="basic-navbar-nav" />

@@ -8,6 +8,10 @@
     align-items: center;
 }
 
+.footerLink:hover {
+    cursor: pointer;
+}
+
 .footerMargin {
     margin-top: 40px;
 }

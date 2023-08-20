@@ -1,5 +1,7 @@
 import { BsDiscord } from "react-icons/bs";
 
+import { DISCORD_INVITATION_LINK } from "../constants";
+
 import "../assets/css/homePage.css";
 
 function Home() {
@@ -10,7 +12,12 @@ function Home() {
                     <h1 className="homePageTitle">
                         Welcome to the Weekly Rumble
                     </h1>
-                    <button className="homePageButton">
+                    <button
+                        className="homePageButton"
+                        onClick={() => {
+                            window.open(DISCORD_INVITATION_LINK, "_blank");
+                        }}
+                    >
                         <p className="homePageButtonText">
                             Join Us on Discord!
                         </p>

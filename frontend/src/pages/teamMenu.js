@@ -18,6 +18,7 @@ import LoadingAnimation from "../components/Utilities/loadingAnimation";
 import ErrorText from "../components/Utilities/errorText";
 
 import "../assets/css/teamMenu.css";
+import LoadingScreen from "../components/Utilities/loadingScreen";
 
 function TeamMenu(props) {
     const [searchParams] = useSearchParams();
@@ -39,7 +40,10 @@ function TeamMenu(props) {
                 id: searchParams.get("teamID"),
             }),
         retry: false,
+        refetchInterval: 15000,
     });
+
+    console.log(teamData);
 
     const teamDataLoading = isTeamDataLoading && teamDataFetchStatus !== "idle";
 
@@ -74,7 +78,10 @@ function TeamMenu(props) {
         numOfExpandedRequestPanels,
     ]);
 
-    const { mutate: changeTeamJoiningMode } = useMutation({
+    const {
+        mutate: changeTeamJoiningMode,
+        isLoading: changeTeamJoiningModeLoading,
+    } = useMutation({
         mutationFn: (joiningMode) =>
             services.changeTeamJoiningMode({
                 teamID: searchParams.get("teamID"),
@@ -92,20 +99,21 @@ function TeamMenu(props) {
         },
     });
 
-    const { mutate: removeFromTeam } = useMutation({
-        mutationFn: () =>
-            services.removeFromTeam({
-                summonerID: localStorage.getItem("summonerID"),
-                teamID: searchParams.get("teamID"),
-            }),
-        onSuccess: () => {
-            navigate(`/teams?tournamentID=${teamData["tournament"]}`);
-        },
-        onError: (error) => {
-            setAlertMessage(error.response.data);
-            setShowAlert(true);
-        },
-    });
+    const { mutate: removeFromTeam, isLoading: removeFromTeamLoading } =
+        useMutation({
+            mutationFn: () =>
+                services.removeFromTeam({
+                    summonerID: localStorage.getItem("summonerID"),
+                    teamID: searchParams.get("teamID"),
+                }),
+            onSuccess: () => {
+                navigate(`/teams?tournamentID=${teamData["tournament"]}`);
+            },
+            onError: (error) => {
+                setAlertMessage(error.response.data);
+                setShowAlert(true);
+            },
+        });
 
     const leaveTeam = () => {
         removeFromTeam();
@@ -191,6 +199,9 @@ function TeamMenu(props) {
 
     return (
         <div className="teamMenuWrapper">
+            {(changeTeamJoiningModeLoading || removeFromTeamLoading) && (
+                <LoadingScreen />
+            )}
             {showGoodAlert && (
                 <CustomAlert
                     alertType="success"

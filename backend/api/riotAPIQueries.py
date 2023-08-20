@@ -120,7 +120,6 @@ def PopulateMatchesData(puuid):
             }
 
         matchCount += 1
-        print("finished " + str(matchCount) + " matche(s)")
 
     return championData
 

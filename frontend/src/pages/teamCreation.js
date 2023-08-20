@@ -60,7 +60,7 @@ function TeamForm() {
     const isFormValid = teamName && teamAcronym;
 
     const handleTeamName = (teamName) => {
-        teamName = teamName.replace(/[^a-zA-Z0-9]/g, "");
+        teamName = teamName.replace(/[^a-zA-Z0-9\s]/g, "");
         teamName = teamName.slice(0, 20);
         setTeamName(teamName);
     };

@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useSearchParams } from "react-router-dom";
 
+import LoadingScreen from "../Utilities/loadingScreen";
+import LoadingAnimation from "../Utilities/loadingAnimation";
 import { rankImgSwitch, masteryImgSwitch } from "../../utilities/imageSwitches";
 import {
     getSummonerIcon,
@@ -9,7 +11,6 @@ import {
 } from "../../utilities/dataDragonCalls";
 
 import services from "../../services";
-import LoadingAnimation from "../Utilities/loadingAnimation";
 
 function RequestMemberCard(props) {
     const [hideMemberDetails, setHideMemberDetails] = useState(false);
@@ -70,7 +71,7 @@ function RequestMemberCard(props) {
         setHideMemberDetails(!hideMemberDetails);
     };
 
-    const { mutate: approveJoin } = useMutation({
+    const { mutate: approveJoin, isLoading: approveJoinLoading } = useMutation({
         mutationFn: () =>
             services.joinTeam({
                 summonerID: summonerID,
@@ -102,7 +103,7 @@ function RequestMemberCard(props) {
         },
     });
 
-    const { mutate: rejectJoin } = useMutation({
+    const { mutate: rejectJoin, isLoading: rejectJoinLoading } = useMutation({
         mutationFn: () =>
             services.rejectJoinRequest({
                 summonerID: summonerID,
@@ -123,6 +124,7 @@ function RequestMemberCard(props) {
 
     return (
         <div>
+            {(approveJoinLoading || rejectJoinLoading) && <LoadingScreen />}
             {profileIconSrcLoading || championIconSrcLoading ? (
                 <LoadingAnimation />
             ) : (

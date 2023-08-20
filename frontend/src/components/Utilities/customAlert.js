@@ -6,6 +6,7 @@ function CustomAlert(props) {
             variant={props.alertType}
             dismissible
             onClose={props.setShowAlert}
+            className="customAlert"
         >
             {props.children}
         </Alert>

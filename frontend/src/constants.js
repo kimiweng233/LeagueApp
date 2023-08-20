@@ -1,1 +1,1 @@
-export const DATA_DRAGON_VERSION = "13.12.1";
+export const DISCORD_INVITATION_LINK = "https://discord.gg/QB8BAeQtTA";

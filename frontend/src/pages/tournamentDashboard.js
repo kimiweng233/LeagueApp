@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useSearchParams } from "react-router-dom";
 
+import LoadingScreen from "../components/Utilities/loadingScreen";
 import LoadingAnimation from "../components/Utilities/loadingAnimation";
 import CustomAlert from "../components/Utilities/customAlert";
 
@@ -42,20 +43,46 @@ function TournamentDashboard() {
     const tournamentDataLoading =
         isTournamentDataLoading && tournamentDataFetchStatus !== "idle";
 
-    const { mutate: advanceRound } = useMutation({
+    const { mutate: advanceRound, isLoading: isAdvanceRoundLoading } =
+        useMutation({
+            mutationFn: (param) =>
+                services.declareRoundWinner({
+                    tournamentID: searchParams.get("tournamentID"),
+                    currGameNum: param.currGameNum_in,
+                    nextGameNum: param.nextGameNum_in,
+                    teamName: param.teamName_in,
+                    id: param.id_in,
+                }),
+            onSuccess: (newBracket) => {
+                queryClient.setQueryData(
+                    ["tournament", searchParams.get("tournamentID")],
+                    {
+                        ...tournamentData,
+                        bracket: newBracket,
+                    }
+                );
+            },
+            onError: (error) => {
+                setAlertMessage(error.response.data);
+                setShowAlert(true);
+            },
+        });
+
+    const { mutate: updateScore, isLoading: updateScoreLoading } = useMutation({
         mutationFn: (param) =>
-            services.declareRoundWinner({
+            services.updateBracketScore({
                 tournamentID: searchParams.get("tournamentID"),
-                currGameNum: param.currGameNum_in,
-                nextGameNum: param.nextGameNum_in,
-                teamName: param.teamName_in,
-                id: param.id_in,
+                id: param.id,
+                newScore: param.score,
             }),
         onSuccess: (newBracket) => {
             queryClient.setQueryData(
                 ["tournament", searchParams.get("tournamentID")],
                 {
-                    ...tournamentData,
+                    ...queryClient.getQueryData([
+                        "tournament",
+                        searchParams.get("tournamentID"),
+                    ]),
                     bracket: newBracket,
                 }
             );
@@ -84,6 +111,7 @@ function TournamentDashboard() {
 
     return (
         <div className="tournamentMenuWrapper">
+            {(isAdvanceRoundLoading || updateScoreLoading) && <LoadingScreen />}
             {showScreen && (
                 <div className="loadingScreen">
                     <EndTournamentCard setShowScreen={setShowScreen} />
@@ -118,6 +146,7 @@ function TournamentDashboard() {
                         setBracketWidth={setBracketWidth}
                         setBracketHeight={setBracketHeight}
                         advanceRound={advanceRound}
+                        updateScore={updateScore}
                     />
                 </div>
                 <button

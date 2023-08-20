@@ -564,3 +564,23 @@ a:hover {
 .tableCellWrapper {
     text-align: center;
 }
+
+.teamsListGetNextButton {
+    margin-top: 40px;
+    width: 70%;
+    font-size: 1.7em;
+    padding: 15px;
+    color: white;
+    background-color: #76bce586;
+    border-radius: 10px;
+    white-space: nowrap;
+    border: none;
+}
+
+.teamsListGetNextButton:hover {
+    background-color: #9fd1ed86;
+}
+
+.teamsListGetNextButton:active {
+    background-color: #83a7bc86;
+}

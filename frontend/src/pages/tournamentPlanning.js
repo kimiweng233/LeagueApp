@@ -8,6 +8,7 @@ import { ImCross } from "react-icons/im";
 import { BsClock } from "react-icons/bs";
 import { FaArrowLeft } from "react-icons/fa";
 
+import LoadingScreen from "../components/Utilities/loadingScreen";
 import LoadingAnimation from "../components/Utilities/loadingAnimation";
 import ErrorText from "../components/Utilities/errorText";
 import CustomAlert from "../components/Utilities/customAlert";
@@ -52,56 +53,71 @@ function TournamentPlanning() {
         retry: false,
     });
 
+    console.log(tournamentData);
+
     const tournamentDataLoading =
         isTournamentDataLoading && tournamentDataFetchStatus !== "idle";
 
-    const { mutate: saveTeamSettings } = useMutation({
-        mutationFn: () =>
-            services.updateTournamentTeams({
-                tournamentID: searchParams.get("tournamentID"),
-                teamData: pendingTeams,
-            }),
-        onSuccess: (data) => {
-            queryClient.setQueryData(
-                ["tournament", searchParams.get("tournamentID")],
-                {
-                    ...tournamentData,
-                    teams: data,
+    const { mutate: saveTeamSettings, isLoading: saveTeamSettingsLoading } =
+        useMutation({
+            mutationFn: () =>
+                services.updateTournamentTeams({
+                    tournamentID: searchParams.get("tournamentID"),
+                    teamData: pendingTeams,
+                }),
+            onSuccess: (data) => {
+                queryClient.setQueryData(
+                    ["tournament", searchParams.get("tournamentID")],
+                    {
+                        ...tournamentData,
+                        teams: data.teams,
+                    }
+                );
+                if (data.omitted.length > 0) {
+                    setShowAlert(true);
+                    setAlertMessage(
+                        "teams " +
+                            data.omitted.join(", ") +
+                            " were ommited because of duplicated name/acronym"
+                    );
                 }
-            );
-            setPendingTeams([]);
-        },
-        onError: (error) => {
-            setShowAlert(true);
-            setAlertMessage(error.response.data);
-        },
-    });
+                setPendingTeams([]);
+            },
+            onError: (error) => {
+                setShowAlert(true);
+                setAlertMessage(error.response.data);
+            },
+        });
 
     const handleSaveTeamSettings = (event) => {
         event.preventDefault();
         saveTeamSettings();
     };
 
-    const { mutate: startTournament } = useMutation({
-        mutationFn: () =>
-            services.startTournament({
-                tournamentID: searchParams.get("tournamentID"),
-                omittedTeams: Array.from(omittedTeams),
-            }),
-        onSuccess: () => {
-            navigate(
-                `/tournamentDashboard?tournamentID=${searchParams.get(
-                    "tournamentID"
-                )}`
-            );
-        },
-        onError: (error) => {
-            setShowAlert(true);
-            setAlertMessage(error.response.data);
-        },
-    });
+    const { mutate: startTournament, isLoading: startTournamentLoading } =
+        useMutation({
+            mutationFn: () =>
+                services.startTournament({
+                    tournamentID: searchParams.get("tournamentID"),
+                    omittedTeams: Array.from(omittedTeams),
+                }),
+            onSuccess: () => {
+                navigate(
+                    `/tournamentDashboard?tournamentID=${searchParams.get(
+                        "tournamentID"
+                    )}`
+                );
+            },
+            onError: (error) => {
+                setShowAlert(true);
+                setAlertMessage(error.response.data);
+            },
+        });
 
-    const { mutate: updateTournamentData } = useMutation({
+    const {
+        mutate: updateTournamentData,
+        isLoading: updateTournamentDataLoading,
+    } = useMutation({
         mutationFn: () =>
             services.updateTournamentData({
                 tournamentID: searchParams.get("tournamentID"),
@@ -136,7 +152,7 @@ function TournamentPlanning() {
     };
 
     const handleTeamName = (teamName) => {
-        teamName = teamName.replace(/[^a-zA-Z0-9]/g, "");
+        teamName = teamName.replace(/[^a-zA-Z0-9\s]/g, "");
         teamName = teamName.slice(0, 20);
         setTeamName(teamName);
     };
@@ -190,6 +206,9 @@ function TournamentPlanning() {
 
     return (
         <div className="tournamentMenuWrapper">
+            {(saveTeamSettingsLoading ||
+                startTournamentLoading ||
+                updateTournamentDataLoading) && <LoadingScreen />}
             {showAlert && (
                 <CustomAlert
                     alertType="danger"

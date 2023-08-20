@@ -105,6 +105,7 @@ const TournamentAdminBracket = (props) => {
                                     <TournamentAdminBracketCard
                                         game={game}
                                         advanceRound={props.advanceRound}
+                                        updateScore={props.updateScore}
                                     />
                                 </foreignObject>
                                 {roundNum != bracket.length - 1 && (

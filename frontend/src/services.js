@@ -106,6 +106,14 @@ const getTeamsWithVacancy = (data) => {
     });
 };
 
+const getTeamsWithVacancyPaginated = (data) => {
+    return http
+        .post(`/getTeamsWithVacancyPaginated/`, data)
+        .then((response) => {
+            return response.data;
+        });
+};
+
 const quickJoin = (data) => {
     return http.post(`/quickJoin/`, data).then((response) => {
         return response.data;
@@ -170,6 +178,7 @@ const functions = {
     updateTournamentTeams,
     startTournament,
     updateTournamentData,
+    getTeamsWithVacancyPaginated,
 };
 
 export default functions;

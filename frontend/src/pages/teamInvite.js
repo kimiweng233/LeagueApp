@@ -3,12 +3,12 @@ import { useQuery, useMutation } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { useSearchParams } from "react-router-dom";
 
+import LoadingScreen from "../components/Utilities/loadingScreen";
+import LoadingAnimation from "../components/Utilities/loadingAnimation";
 import LoginGuard from "../components/Utilities/loginGuard";
 import CustomAlert from "../components/Utilities/customAlert";
 
 import services from "../services";
-
-import LoadingAnimation from "../components/Utilities/loadingAnimation";
 
 function TeamInvite() {
     const [searchParams] = useSearchParams();
@@ -52,7 +52,7 @@ function TeamInvite() {
 
     const teamDataLoading = isTeamDataLoading && teamDataFetchStatus !== "idle";
 
-    const { mutate: approveJoin } = useMutation({
+    const { mutate: approveJoin, isLoading: approveJoinLoading } = useMutation({
         mutationFn: () =>
             services.joinTeam({
                 summonerID: localStorage.getItem("summonerID"),
@@ -88,6 +88,7 @@ function TeamInvite() {
 
     return (
         <div className="formWrapper">
+            {approveJoinLoading && <LoadingScreen />}
             {showAlert && (
                 <CustomAlert
                     alertType="danger"

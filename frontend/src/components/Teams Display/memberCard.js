@@ -6,6 +6,7 @@ import { AiOutlineStop } from "react-icons/ai";
 
 import RoleButton from "../Teams Display/roleButton";
 import LoadingAnimation from "../Utilities/loadingAnimation";
+import LoadingScreen from "../Utilities/loadingScreen";
 import {
     rankImgSwitch,
     positionImgSwitch,
@@ -70,50 +71,58 @@ function MemberCard(props) {
         setHideMemberDetails(globalCollapseStatus);
     }, [globalCollapseStatus, changeSignal]);
 
-    const { mutate: kickTeammate } = useMutation({
-        mutationFn: () =>
-            services.removeFromTeam({
-                summonerID: summonerID,
-                teamID: searchParams.get("teamID"),
-            }),
-        onSuccess: () => {
-            queryClient.setQueryData(
-                ["team-data", searchParams.get("teamID")],
-                {
-                    ...teamData,
-                    members: teamData.members.filter(
-                        (member) => member.summonerID != summonerID
-                    ),
-                }
-            );
-        },
-    });
+    const { mutate: kickTeammate, isLoading: kickTeammateLoading } =
+        useMutation({
+            mutationFn: () =>
+                services.removeFromTeam({
+                    summonerID: summonerID,
+                    teamID: searchParams.get("teamID"),
+                }),
+            onSuccess: () => {
+                queryClient.setQueryData(
+                    ["team-data", searchParams.get("teamID")],
+                    {
+                        ...teamData,
+                        members: teamData.members.filter(
+                            (member) => member.summonerID != summonerID
+                        ),
+                    }
+                );
+            },
+        });
 
-    const { mutate: removeTeamRole } = useMutation({
-        mutationFn: () =>
-            services.removeTeamRole({
-                summonerID: summonerID,
-                teamID: searchParams.get("teamID"),
-            }),
-        onSuccess: () => {
-            queryClient.setQueryData(
-                ["team-data", searchParams.get("teamID")],
-                {
-                    ...teamData,
-                    rolesFilled: Object.keys(...teamData.rolesFilled).reduce(
-                        (acc, key) => ({
-                            ...acc,
-                            key:
-                                teamData.rolesFilled[key] == summonerID
-                                    ? null
-                                    : teamData.rolesFilled[key],
-                        }),
-                        {}
-                    ),
-                }
-            );
-        },
-    });
+    const { mutate: removeTeamRole, isLoading: removeTeamRoleLoading } =
+        useMutation({
+            mutationFn: () =>
+                services.removeTeamRole({
+                    summonerID: summonerID,
+                    teamID: searchParams.get("teamID"),
+                }),
+            onSuccess: () => {
+                queryClient.setQueryData(
+                    ["team-data", searchParams.get("teamID")],
+                    {
+                        ...teamData,
+                        rolesFilled: Object.keys(teamData.rolesFilled).reduce(
+                            (acc, key) => {
+                                console.log(key);
+                                acc[key] =
+                                    teamData.rolesFilled[key] == summonerID
+                                        ? null
+                                        : teamData.rolesFilled[key];
+                                return acc;
+                            },
+                            {}
+                        ),
+                    }
+                );
+            },
+        });
+
+    const handleRemoveTeamRole = (event) => {
+        event.stopPropagation();
+        removeTeamRole();
+    };
 
     const isUser = summonerID == localStorage.getItem("summonerID");
     const hasRole = Object.values(roles).includes(summonerID);
@@ -178,7 +187,7 @@ function MemberCard(props) {
                     <div className="positionSelectionImgWrapper">
                         <AiOutlineStop
                             className="disselectRoleEmblem"
-                            onClick={removeTeamRole}
+                            onClick={(event) => handleRemoveTeamRole(event)}
                         />
                     </div>
                 </div>
@@ -210,6 +219,9 @@ function MemberCard(props) {
 
     return (
         <div>
+            {(removeTeamRoleLoading || kickTeammateLoading) && (
+                <LoadingScreen />
+            )}
             {profileIconSrcLoading || championIconSrcLoading ? (
                 <LoadingAnimation />
             ) : (
